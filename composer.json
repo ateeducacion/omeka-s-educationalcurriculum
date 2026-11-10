@@ -1,6 +1,6 @@
 {
-    "name": "ateeducacion/omeka-s-moduletemplate",
-    "description": "Module template for Omeka S",
+    "name": "ateeducacion/omeka-s-educationalcurriculum",
+    "description": "Loads published releases of the LOMLOE Canary Islands curriculum into Omeka S",
     "type": "omeka-s-module",
     "license": "GPL-3.0-or-later",
     "authors": [
@@ -9,16 +9,16 @@
             "email": "ate.educacion@gobiernodecanarias.org"
         }
     ],
-    "homepage": "https://github.com/ateeducacion/omeka-s-ModuleTemplate",
+    "homepage": "https://github.com/ateeducacion/omeka-s-educationalcurriculum",
     "support": {
-        "issues": "https://github.com/ateeducacion/omeka-s-ModuleTemplate/issues"
+        "issues": "https://github.com/ateeducacion/omeka-s-educationalcurriculum/issues"
     },
     "keywords": [
         "Omeka S",
         "module",
-        "3D",
-        "three.js",
-        "model-viewer"
+        "curriculum",
+        "LOMLOE",
+        "SKOS"
     ],
     "require": {
         "php": ">=7.4"
@@ -41,18 +41,18 @@
     },
     "autoload": {
         "psr-4": {
-            "ModuleTemplate\\": "src/"
+            "EducationalCurriculum\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "ModuleTemplateTest\\": "test/"
+            "EducationalCurriculumTest\\": "test/"
         }
     },
     "repositories": [
         {
-        "type": "vcs",
-        "url": "https://github.com/zerocrates/extract-tagged-strings.git"
+            "type": "vcs",
+            "url": "https://github.com/zerocrates/extract-tagged-strings.git"
         }
     ]
 }

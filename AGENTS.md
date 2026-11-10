@@ -1,4 +1,4 @@
-# ModuleTemplate
+# EducationalCurriculum
 
 This is an Omeka S module, extending core through native hooks and configuration.
 Supported PHP: `>=7.4` (`composer.json`); check `config/module.ini` for Omeka compatibility.

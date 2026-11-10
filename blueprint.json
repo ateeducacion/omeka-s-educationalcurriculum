@@ -1,7 +1,7 @@
 {
   "$schema": "https://omeka-s-contrib.github.io/omeka-s-blueprints/schema/v0/blueprint-schema.json",
   "install": {
-    "title": "ModuleTemplate Playground",
+    "title": "EducationalCurriculum Playground",
     "locale": "es",
     "timezone": "Atlantic/Canary"
   },
@@ -21,17 +21,17 @@
   ],
   "modules": [
     {
-      "name": "ModuleTemplate",
+      "name": "EducationalCurriculum",
       "state": "activate",
-      "source": "https://github.com/ateeducacion/omeka-s-ModuleTemplate/archive/refs/heads/main.zip"
+      "source": "https://github.com/ateeducacion/omeka-s-educationalcurriculum/archive/refs/heads/main.zip"
     }
   ],
   "sites": [
     {
-      "title": "ModuleTemplate Demo",
+      "title": "EducationalCurriculum Demo",
       "slug": "demo",
       "theme": "default",
-      "summary": "Instalacion minima para probar el modulo ModuleTemplate en Omeka S Playground.",
+      "summary": "Instalacion minima para probar el modulo EducationalCurriculum en Omeka S Playground.",
       "isPublic": true,
       "setAsDefault": true
     }
