@@ -1,0 +1,29 @@
+---
+name: PR Playground Preview
+
+on:
+  pull_request:
+    paths-ignore:
+      - '.agents/skills/**'
+      - '.claude/skills/**'
+    types: [opened, synchronize, reopened, edited]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      # The ZIP is pinned to the PR head commit: Playground caches add-ons by
+      # download URL, so a branch ZIP would keep serving an old copy.
+      - name: Post or update playground preview comment
+        uses: ateeducacion/action-omeka-s-playground-pr-preview@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          zip-url: https://github.com/${{ github.repository }}/archive/${{ github.event.pull_request.head.sha }}.zip
+          blueprint-file: blueprint.json

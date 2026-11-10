@@ -1,0 +1,65 @@
+---
+name: CI
+
+on:
+  pull_request:
+    paths-ignore:
+      - '.agents/skills/**'
+      - '.claude/skills/**'
+  push:
+    paths-ignore:
+      - '.agents/skills/**'
+      - '.claude/skills/**'
+    tags:
+      - '*'
+    branches:
+      - '**'
+
+permissions:
+  contents: read
+
+jobs:
+  lint_and_test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      # Checkout the code
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: PHP setup
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: pcov
+          extensions: mbstring, intl, curl, dom, json, pdo, mysql, xml, zip
+          tools: composer
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Install gettext
+        run: sudo apt-get install -y gettext
+
+      - name: Check untranslated strings
+        run: make check-untranslated
+
+      - name: Generate .mo file
+        run: make compile-mo
+
+      - name: Run code linting
+        run: vendor/bin/phpcs . --standard=PSR2 --ignore=vendor/,assets/,node_modules/,tests/js/,tests/ --colors --extensions=php
+
+      - name: Run unit tests with coverage
+        run: make test-coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v7
+        with:
+          use_oidc: true
+          files: coverage.xml
+          disable_search: true
+          fail_ci_if_error: true
