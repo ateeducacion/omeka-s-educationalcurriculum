@@ -8,3 +8,35 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/Entity/CurriculumImport.php:20
+msgid "analyzing"
+msgstr "analizando"
+
+#: src/Entity/CurriculumImport.php:21
+msgid "ready"
+msgstr "lista"
+
+#: src/Entity/CurriculumImport.php:22
+msgid "blocked"
+msgstr "bloqueada"
+
+#: src/Entity/CurriculumImport.php:23
+msgid "stale"
+msgstr "necesita análisis"
+
+#: src/Entity/CurriculumImport.php:24
+msgid "applying"
+msgstr "aplicando"
+
+#: src/Entity/CurriculumImport.php:25
+msgid "interrupted"
+msgstr "interrumpida"
+
+#: src/Entity/CurriculumImport.php:26
+msgid "applied"
+msgstr "aplicada"
+
+#: src/Entity/CurriculumImport.php:27
+msgid "discarded"
+msgstr "descartada"

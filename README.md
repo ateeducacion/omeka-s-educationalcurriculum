@@ -24,7 +24,7 @@ Omeka contract (`docs/omeka.md`).
 ## Quick Start (Docker)
 
 - Requirements: Docker Desktop 4+, Make
-- Start stack: `make up` then open `http://localhost:8080`
+- Start stack: `make up` then open `http://localhost:8080` (set `OMEKA_PORT` to use another port, e.g. `OMEKA_PORT=8081 make upd`)
 - Stop stack: `make down`
 
 The stack uses the image `erseco/alpine-omeka-s:4.2` and applies `blueprint.json` on every start,

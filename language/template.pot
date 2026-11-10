@@ -5,3 +5,35 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: src/Entity/CurriculumImport.php:20
+msgid "analyzing"
+msgstr ""
+
+#: src/Entity/CurriculumImport.php:21
+msgid "ready"
+msgstr ""
+
+#: src/Entity/CurriculumImport.php:22
+msgid "blocked"
+msgstr ""
+
+#: src/Entity/CurriculumImport.php:23
+msgid "stale"
+msgstr ""
+
+#: src/Entity/CurriculumImport.php:24
+msgid "applying"
+msgstr ""
+
+#: src/Entity/CurriculumImport.php:25
+msgid "interrupted"
+msgstr ""
+
+#: src/Entity/CurriculumImport.php:26
+msgid "applied"
+msgstr ""
+
+#: src/Entity/CurriculumImport.php:27
+msgid "discarded"
+msgstr ""
+

@@ -6,11 +6,12 @@ use PHPUnit\Framework\TestCase;
 
 class ModuleConfigTest extends TestCase
 {
-    public function testModuleConfigRegistersViewsAndTranslations(): void
+    public function testModuleConfigRegistersEntitiesViewsAndTranslations(): void
     {
         $root = dirname(__DIR__, 3);
         $config = require $root . '/config/module.config.php';
 
+        $this->assertContains($root . '/src/Entity', $config['entity_manager']['mapping_classes_paths']);
         $this->assertContains($root . '/view', $config['view_manager']['template_path_stack']);
         $this->assertSame(
             $root . '/language',

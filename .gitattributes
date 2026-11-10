@@ -9,7 +9,6 @@
 /.php-cs-fixer.dist.php  export-ignore
 blueprint.json           export-ignore
 /.tx/                    export-ignore
-/data/					 export-ignore
 /language/*.po           export-ignore
 /language/*.pot          export-ignore
 /test/                   export-ignore
