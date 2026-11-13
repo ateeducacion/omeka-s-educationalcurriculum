@@ -9,6 +9,11 @@ return [
             dirname(__DIR__) . '/src/Entity',
         ],
     ],
+    'service_manager' => [
+        'factories' => [
+            Sync\Synchronizer::class => Service\SynchronizerFactory::class,
+        ],
+    ],
     'view_manager' => [
         'template_path_stack' => [
             dirname(__DIR__) . '/view',

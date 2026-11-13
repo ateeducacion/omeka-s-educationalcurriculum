@@ -119,7 +119,10 @@ class ModuleTest extends TestCase
 
     public function testFilesPathIsInsideTheFileStore(): void
     {
-        $this->assertSame($this->filesPath . '/educationalcurriculum', $this->module->getFilesPath($this->services));
+        $this->assertSame(
+            $this->filesPath . '/educationalcurriculum',
+            Module::filesPath($this->services->get('Config'))
+        );
     }
 
     public function testUninstallDropsTableAndImportFiles(): void

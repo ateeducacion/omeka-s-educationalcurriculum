@@ -51,18 +51,16 @@ class Module extends AbstractModule
     public function uninstall(ServiceLocatorInterface $services)
     {
         $services->get('Omeka\Connection')->executeStatement('DROP TABLE IF EXISTS curriculum_import');
-        $this->removeDirectory($this->getFilesPath($services));
+        $this->removeDirectory(self::filesPath($services->get('Config')));
     }
 
     /**
      * Directory where the files of each import are stored, one subdirectory per import id.
      *
-     * @param ServiceLocatorInterface $services
-     * @return string
+     * @param array $config The application configuration
      */
-    public function getFilesPath(ServiceLocatorInterface $services): string
+    public static function filesPath(array $config): string
     {
-        $config = $services->get('Config');
         $basePath = $config['file_store']['local']['base_path'] ?? null;
         if ($basePath === null) {
             $basePath = OMEKA_PATH . '/files';
