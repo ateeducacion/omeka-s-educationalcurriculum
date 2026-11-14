@@ -1,0 +1,235 @@
+<?php
+/**
+ * @var \Laminas\View\Renderer\PhpRenderer $this
+ * @var \EducationalCurriculum\Entity\CurriculumImport $import
+ * @var array|null $summary
+ * @var string $list
+ * @var array $entries
+ * @var \Omeka\Form\ConfirmForm[] $forms
+ */
+use EducationalCurriculum\Admin\ReportErrors;
+use EducationalCurriculum\Entity\CurriculumImport;
+
+$translate = $this->plugin('translate');
+$escape = $this->plugin('escapeHtml');
+$this->htmlElement('body')->appendAttribute('class', 'educational-curriculum show');
+$date = function ($value) use ($translate) {
+    return $value ? $this->i18n()->dateFormat($value, 'medium', 'short') : $translate('[None]');
+};
+$jobLink = function ($job) use ($translate, $escape) {
+    if (!$job) {
+        return $translate('[None]');
+    }
+    return $this->hyperlink(
+        sprintf('#%s (%s)', $job->getId(), $translate($job->getStatus())),
+        $this->url('admin/id', ['controller' => 'job', 'action' => 'show', 'id' => $job->getId()])
+    );
+};
+$itemLink = function ($identifier, $itemId) use ($escape) {
+    if (!$itemId) {
+        return $escape($identifier);
+    }
+    return $this->hyperlink(
+        (string) $identifier,
+        $this->url('admin/id', ['controller' => 'item', 'action' => 'show', 'id' => $itemId])
+    );
+};
+// Short text of a list of values: literals, URIs and links to other nodes.
+$valuesText = function (array $values) {
+    $texts = [];
+    foreach ($values as $value) {
+        if ($value['type'] === 'resource:item') {
+            $texts[] = $value['identifier'] ?? ('#' . ($value['item'] ?? '?'));
+        } elseif ($value['type'] === 'uri') {
+            $texts[] = $value['o:label'] ?? $value['@id'];
+        } else {
+            $texts[] = $value['@value'] ?? '';
+        }
+    }
+    $text = implode('; ', $texts);
+    return mb_strlen($text) > 160 ? mb_substr($text, 0, 159) . '…' : $text;
+};
+$notices = [
+    CurriculumImport::STATUS_ANALYZING => 'The release is being analyzed. Reload this page to see the report.', // @translate
+    CurriculumImport::STATUS_APPLYING => 'The release is being applied. Reload this page to see the result.', // @translate
+    CurriculumImport::STATUS_BLOCKED => 'The report has errors that must be solved before applying the release.', // @translate
+    CurriculumImport::STATUS_STALE => 'The items or the vocabulary changed after the analysis, or the analysis failed. Analyze the import again before applying it.', // @translate
+    CurriculumImport::STATUS_INTERRUPTED => 'Applying the release was interrupted. Analyze the import again: the new report shows what is left to apply.', // @translate
+];
+$listLabels = [
+    'new' => $translate('New'),
+    'modified' => $translate('Modified'),
+    'retired' => $translate('Retired'),
+];
+?>
+
+<?php echo $this->pageTitle(
+    sprintf($translate('Release %s'), $escape($import->getVersion())) . ' · #' . $escape($import->getId()),
+    1,
+    $translate('Curriculum')
+); ?>
+
+<div id="page-actions">
+    <?php foreach ($forms as $form): ?>
+        <?php echo $this->form($form); ?>
+    <?php endforeach; ?>
+</div>
+
+<?php if (isset($notices[$import->getStatus()])): ?>
+<ul class="messages">
+    <li class="warning"><?php echo $translate($notices[$import->getStatus()]); ?></li>
+</ul>
+<?php endif; ?>
+
+<dl class="educational-curriculum-import">
+    <div class="meta-group">
+        <dt><?php echo $translate('Status'); ?></dt>
+        <dd class="value"><?php echo $escape($translate($import->getStatus())); ?></dd>
+    </div>
+    <div class="meta-group">
+        <dt><?php echo $translate('Uploaded'); ?></dt>
+        <dd class="value"><?php echo $escape($date($import->getCreated())); ?></dd>
+        <?php if ($import->getOwner()): ?>
+        <dd class="value"><?php echo $escape($import->getOwner()->getEmail()); ?></dd>
+        <?php endif; ?>
+    </div>
+    <div class="meta-group">
+        <dt><?php echo $translate('Analysis job'); ?></dt>
+        <dd class="value"><?php echo $jobLink($import->getAnalyzeJob()); ?></dd>
+    </div>
+    <div class="meta-group">
+        <dt><?php echo $translate('Apply job'); ?></dt>
+        <dd class="value"><?php echo $jobLink($import->getApplyJob()); ?></dd>
+    </div>
+</dl>
+
+<?php if ($summary !== null): ?>
+
+<h2><?php echo $translate('Report'); ?></h2>
+<?php if ($summary['empty']): ?>
+<p><?php echo $translate('No changes: the items and the vocabulary already match this release.'); ?></p>
+<?php else: ?>
+<p><?php echo $escape(sprintf(
+    $translate('%1$s new, %2$s modified and %3$s retired items.'),
+    (int) $summary['counts']['new'],
+    (int) $summary['counts']['modified'],
+    (int) $summary['counts']['retired']
+)); ?></p>
+<?php endif; ?>
+
+<?php if ($summary['errors']): ?>
+<h3><?php echo $translate('Errors'); ?></h3>
+<ul class="educational-curriculum-errors">
+    <?php foreach ($summary['errors'] as $error): ?>
+    <?php [$template, $args] = ReportErrors::message($error); ?>
+    <li>
+        <?php echo $escape(vsprintf($translate($template), $args)); ?>
+        <?php if ($error['item']): ?>
+            (<?php echo $itemLink('#' . $error['item'], $error['item']); ?>)
+        <?php endif; ?>
+    </li>
+    <?php endforeach; ?>
+</ul>
+<?php endif; ?>
+
+<?php if ($summary['summary']): ?>
+<h3><?php echo $translate('By type of node'); ?></h3>
+<table class="tablesaw" data-tablesaw-mode="stack">
+    <thead>
+        <tr>
+            <th><?php echo $translate('Class'); ?></th>
+            <th><?php echo $translate('New'); ?></th>
+            <th><?php echo $translate('Modified'); ?></th>
+            <th><?php echo $translate('Retired'); ?></th>
+            <th><?php echo $translate('Unchanged'); ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($summary['summary'] as $class => $counts): ?>
+        <tr>
+            <td><?php echo $escape($class); ?></td>
+            <td><?php echo $escape((int) $counts['new']); ?></td>
+            <td><?php echo $escape((int) $counts['modified']); ?></td>
+            <td><?php echo $escape((int) $counts['retired']); ?></td>
+            <td><?php echo $escape((int) $counts['unchanged']); ?></td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+<?php endif; ?>
+
+<?php if ($summary['vocabulary']['added'] || $summary['vocabulary']['removed']): ?>
+<h3><?php echo $translate('Vocabulary cur'); ?></h3>
+<dl>
+    <?php if ($summary['vocabulary']['added']): ?>
+    <div class="meta-group">
+        <dt><?php echo $translate('New terms'); ?></dt>
+        <dd class="value"><?php echo $escape(implode(', ', $summary['vocabulary']['added'])); ?></dd>
+    </div>
+    <?php endif; ?>
+    <?php if ($summary['vocabulary']['removed']): ?>
+    <div class="meta-group">
+        <dt><?php echo $translate('Removed terms'); ?></dt>
+        <dd class="value"><?php echo $escape(implode(', ', $summary['vocabulary']['removed'])); ?></dd>
+    </div>
+    <?php endif; ?>
+</dl>
+<?php endif; ?>
+
+<?php if (!$summary['empty']): ?>
+<h3><?php echo $translate('Items'); ?></h3>
+<nav class="section-nav">
+    <ul>
+        <?php foreach ($listLabels as $name => $label): ?>
+        <li<?php echo $name === $list ? ' class="active"' : ''; ?>>
+            <?php echo $this->hyperlink(
+                sprintf('%s (%s)', $label, (int) $summary['counts'][$name]),
+                $this->url(null, [], ['query' => ['list' => $name]], true)
+            ); ?>
+        </li>
+        <?php endforeach; ?>
+    </ul>
+</nav>
+
+<?php if ($entries): ?>
+<div class="browse-controls"><?php echo $this->pagination(); ?></div>
+<table class="tablesaw" data-tablesaw-mode="stack">
+    <thead>
+        <tr>
+            <th><?php echo $translate('Identifier'); ?></th>
+            <th><?php echo $translate('Class'); ?></th>
+            <th><?php echo $list === 'new' ? $translate('Label') : $translate('Changes'); ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($entries as $entry): ?>
+        <tr>
+            <td><?php echo $itemLink($entry['identifier'], $entry['item'] ?? null); ?></td>
+            <td><?php echo $escape($entry['class']); ?></td>
+            <td>
+                <?php if ($list === 'new'): ?>
+                    <?php echo $escape($valuesText($entry['values']['skos:prefLabel'] ?? [])); ?>
+                <?php else: ?>
+                    <ul>
+                    <?php foreach ($entry['changes'] as $term => $change): ?>
+                        <li>
+                            <strong><?php echo $escape($term); ?></strong>:
+                            <del><?php echo $escape($valuesText($change['before'])); ?></del>
+                            →
+                            <ins><?php echo $escape($valuesText($change['after'])); ?></ins>
+                        </li>
+                    <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+<div class="browse-controls"><?php echo $this->pagination(); ?></div>
+<?php else: ?>
+<div class="no-resources"><p><?php echo $translate('No items in this list.'); ?></p></div>
+<?php endif; ?>
+<?php endif; ?>
+
+<?php endif; ?>

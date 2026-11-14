@@ -1,0 +1,17 @@
+<?php
+/**
+ * @var \Laminas\View\Renderer\PhpRenderer $this
+ * @var \EducationalCurriculum\Form\UploadForm $form
+ */
+$translate = $this->plugin('translate');
+$this->htmlElement('body')->appendAttribute('class', 'educational-curriculum upload');
+$form->prepare();
+?>
+
+<?php echo $this->pageTitle($translate('Upload release'), 1, $translate('Curriculum')); ?>
+
+<p><?php echo $translate('Upload the three files of a published release. They are checked first; if they are valid, the release is analyzed in the background and nothing changes until you apply it.'); ?></p>
+
+<?php echo $this->form()->openTag($form); ?>
+<?php echo $this->formCollection($form, false); ?>
+<?php echo $this->form()->closeTag(); ?>

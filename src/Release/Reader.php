@@ -75,7 +75,10 @@ class Reader
             $value = is_array($value) ? ($value[$key] ?? null) : null;
         }
         if (!is_string($value) || $value === '') {
-            throw new ReleaseException('curriculo.json has no %s.', implode('.', $path)); // @translate
+            throw new ReleaseException(
+                'curriculo.json has no %s.', // @translate
+                implode('.', $path)
+            );
         }
         return $value;
     }
@@ -83,7 +86,10 @@ class Reader
     private function requireNodes(array $data): array
     {
         if (!isset($data['nodos'])) {
-            throw new ReleaseException('curriculo.json has no %s.', 'nodos'); // @translate
+            throw new ReleaseException(
+                'curriculo.json has no %s.', // @translate
+                'nodos'
+            );
         }
         $nodes = $data['nodos'];
         if (!is_array($nodes) || array_values($nodes) !== $nodes) {
