@@ -14,6 +14,8 @@ use RecursiveIteratorIterator;
  */
 class Module extends AbstractModule
 {
+    const SKOS_NAMESPACE = 'http://www.w3.org/2004/02/skos/core#';
+
     /**
      * Retrieve the configuration array.
      *
@@ -25,7 +27,7 @@ class Module extends AbstractModule
     }
 
     /**
-     * Create the table of curriculum imports.
+     * Create the table of curriculum imports and install the SKOS vocabulary if it is missing.
      *
      * @param ServiceLocatorInterface $services
      */
@@ -36,6 +38,7 @@ class Module extends AbstractModule
         foreach (array_filter(array_map('trim', explode(";\n", $schema))) as $sql) {
             $connection->executeStatement($sql);
         }
+        $this->installSkos($services);
     }
 
     /**
@@ -48,23 +51,41 @@ class Module extends AbstractModule
     public function uninstall(ServiceLocatorInterface $services)
     {
         $services->get('Omeka\Connection')->executeStatement('DROP TABLE IF EXISTS curriculum_import');
-        $this->removeDirectory($this->getFilesPath($services));
+        $this->removeDirectory(self::filesPath($services->get('Config')));
     }
 
     /**
      * Directory where the files of each import are stored, one subdirectory per import id.
      *
-     * @param ServiceLocatorInterface $services
-     * @return string
+     * @param array $config The application configuration
      */
-    public function getFilesPath(ServiceLocatorInterface $services): string
+    public static function filesPath(array $config): string
     {
-        $config = $services->get('Config');
         $basePath = $config['file_store']['local']['base_path'] ?? null;
         if ($basePath === null) {
             $basePath = OMEKA_PATH . '/files';
         }
         return $basePath . '/educationalcurriculum';
+    }
+
+    /**
+     * Import the bundled SKOS vocabulary unless one with its namespace is already installed.
+     */
+    private function installSkos(ServiceLocatorInterface $services): void
+    {
+        $api = $services->get('Omeka\ApiManager');
+        if ($api->search('vocabularies', ['namespace_uri' => self::SKOS_NAMESPACE])->getTotalResults() > 0) {
+            return;
+        }
+        $services->get('Omeka\RdfImporter')->import('file', [
+            'o:namespace_uri' => self::SKOS_NAMESPACE,
+            'o:prefix' => 'skos',
+            'o:label' => 'SKOS',
+            'o:comment' => 'Simple Knowledge Organization System',
+        ], [
+            'file' => __DIR__ . '/data/vocabularies/skos.rdf',
+            'format' => 'rdfxml',
+        ]);
     }
 
     private function removeDirectory(string $path): void

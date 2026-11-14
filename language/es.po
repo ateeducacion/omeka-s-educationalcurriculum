@@ -1,13 +1,249 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: EducationalCurriculum\n"
-"POT-Creation-Date: 2026-11-10 00:00+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-14 17:05+0000\n"
 "PO-Revision-Date: 2026-11-10 00:00+0000\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: view/educational-curriculum/admin/index/index.phtml:10
+#: view/educational-curriculum/admin/index/show.phtml:17
+#: view/educational-curriculum/admin/index/show.phtml:21
+msgid "[None]"
+msgstr "[Ninguno]"
+
+#: view/educational-curriculum/admin/index/index.phtml:14
+#: view/educational-curriculum/admin/index/show.phtml:69
+#: view/educational-curriculum/admin/index/upload.phtml:11
+msgid "Curriculum"
+msgstr "Currículo"
+
+#: view/educational-curriculum/admin/index/index.phtml:18
+#: view/educational-curriculum/admin/index/upload.phtml:11
+msgid "Upload release"
+msgstr "Cargar versión"
+
+#: view/educational-curriculum/admin/index/index.phtml:26
+msgid "Loaded version"
+msgstr "Versión cargada"
+
+#: view/educational-curriculum/admin/index/index.phtml:28
+msgid "No release loaded yet"
+msgstr "Todavía no se ha cargado ninguna versión"
+
+#: view/educational-curriculum/admin/index/index.phtml:32
+msgid "Applied"
+msgstr "Aplicada"
+
+#: view/educational-curriculum/admin/index/index.phtml:36
+msgid "Current terms"
+msgstr "Términos vigentes"
+
+#: view/educational-curriculum/admin/index/index.phtml:40
+msgid "Retired terms"
+msgstr "Términos retirados"
+
+#: view/educational-curriculum/admin/index/index.phtml:45
+msgid "Imports"
+msgstr "Cargas"
+
+#: view/educational-curriculum/admin/index/index.phtml:50
+msgid "Import"
+msgstr "Carga"
+
+#: view/educational-curriculum/admin/index/index.phtml:51
+msgid "Version"
+msgstr "Versión"
+
+#: view/educational-curriculum/admin/index/index.phtml:52
+#: view/educational-curriculum/admin/index/show.phtml:86
+msgid "Status"
+msgstr "Estado"
+
+#: view/educational-curriculum/admin/index/index.phtml:53
+#: view/educational-curriculum/admin/index/show.phtml:90
+msgid "Uploaded"
+msgstr "Subida"
+
+#: view/educational-curriculum/admin/index/index.phtml:54
+msgid "Updated"
+msgstr "Actualizada"
+
+#: view/educational-curriculum/admin/index/index.phtml:55
+msgid "Owner"
+msgstr "Propietario"
+
+#: view/educational-curriculum/admin/index/index.phtml:71
+msgid "[No owner]"
+msgstr "[Sin propietario]"
+
+#: view/educational-curriculum/admin/index/index.phtml:78
+msgid "No release has been uploaded yet."
+msgstr "Todavía no se ha subido ninguna versión."
+
+#: view/educational-curriculum/admin/index/show.phtml:60
+#: view/educational-curriculum/admin/index/show.phtml:141
+msgid "New"
+msgstr "Nuevas"
+
+#: view/educational-curriculum/admin/index/show.phtml:61
+#: view/educational-curriculum/admin/index/show.phtml:142
+msgid "Modified"
+msgstr "Modificadas"
+
+#: view/educational-curriculum/admin/index/show.phtml:62
+#: view/educational-curriculum/admin/index/show.phtml:143
+msgid "Retired"
+msgstr "Retiradas"
+
+#: view/educational-curriculum/admin/index/show.phtml:67
+#, php-format
+msgid "Release %s"
+msgstr "Versión %s"
+
+#: view/educational-curriculum/admin/index/show.phtml:97
+msgid "Analysis job"
+msgstr "Trabajo de análisis"
+
+#: view/educational-curriculum/admin/index/show.phtml:101
+msgid "Apply job"
+msgstr "Trabajo de aplicación"
+
+#: view/educational-curriculum/admin/index/show.phtml:108
+msgid "Report"
+msgstr "Informe"
+
+#: view/educational-curriculum/admin/index/show.phtml:110
+msgid "No changes: the items and the vocabulary already match this release."
+msgstr ""
+"Sin cambios: las fichas y el vocabulario ya coinciden con esta versión."
+
+#: view/educational-curriculum/admin/index/show.phtml:113
+#, php-format
+msgid "%1$s new, %2$s modified and %3$s retired items."
+msgstr "%1$s fichas nuevas, %2$s modificadas y %3$s retiradas."
+
+#: view/educational-curriculum/admin/index/show.phtml:121
+msgid "Errors"
+msgstr "Errores"
+
+#: view/educational-curriculum/admin/index/show.phtml:136
+msgid "By type of node"
+msgstr "Por tipo de nodo"
+
+#: view/educational-curriculum/admin/index/show.phtml:140
+#: view/educational-curriculum/admin/index/show.phtml:200
+msgid "Class"
+msgstr "Clase"
+
+#: view/educational-curriculum/admin/index/show.phtml:144
+msgid "Unchanged"
+msgstr "Sin cambios"
+
+#: view/educational-curriculum/admin/index/show.phtml:162
+msgid "Vocabulary cur"
+msgstr "Vocabulario cur"
+
+#: view/educational-curriculum/admin/index/show.phtml:166
+msgid "New terms"
+msgstr "Términos nuevos"
+
+#: view/educational-curriculum/admin/index/show.phtml:172
+msgid "Removed terms"
+msgstr "Términos eliminados"
+
+#: view/educational-curriculum/admin/index/show.phtml:180
+msgid "Items"
+msgstr "Fichas"
+
+#: view/educational-curriculum/admin/index/show.phtml:199
+msgid "Identifier"
+msgstr "Identificador"
+
+#: view/educational-curriculum/admin/index/show.phtml:201
+msgid "Label"
+msgstr "Etiqueta"
+
+#: view/educational-curriculum/admin/index/show.phtml:201
+msgid "Changes"
+msgstr "Cambios"
+
+#: view/educational-curriculum/admin/index/show.phtml:231
+msgid "No items in this list."
+msgstr "No hay fichas en esta lista."
+
+#: view/educational-curriculum/admin/index/upload.phtml:13
+msgid ""
+"Upload the three files of a published release. They are checked first; if "
+"they are valid, the release is analyzed in the background and nothing "
+"changes until you apply it."
+msgstr ""
+"Sube los tres ficheros de una versión publicada. Primero se comprueban; si "
+"son válidos, la versión se analiza en segundo plano y no cambia nada hasta "
+"que la apliques."
+
+#: view/educational-curriculum/admin/index/show.phtml:53
+msgid "The release is being analyzed. Reload this page to see the report."
+msgstr ""
+"La versión se está analizando. Recarga esta página para ver el informe."
+
+#: view/educational-curriculum/admin/index/show.phtml:54
+msgid "The release is being applied. Reload this page to see the result."
+msgstr ""
+"La versión se está aplicando. Recarga esta página para ver el resultado."
+
+#: view/educational-curriculum/admin/index/show.phtml:55
+msgid "The report has errors that must be solved before applying the release."
+msgstr ""
+"El informe tiene errores que hay que resolver antes de aplicar la versión."
+
+#: view/educational-curriculum/admin/index/show.phtml:56
+msgid ""
+"The items or the vocabulary changed after the analysis, or the analysis "
+"failed. Analyze the import again before applying it."
+msgstr ""
+"Las fichas o el vocabulario cambiaron después del análisis, o el análisis "
+"falló. Vuelve a analizar la carga antes de aplicarla."
+
+#: view/educational-curriculum/admin/index/show.phtml:57
+msgid ""
+"Applying the release was interrupted. Analyze the import again: the new "
+"report shows what is left to apply."
+msgstr ""
+"La aplicación de la versión se interrumpió. Vuelve a analizar la carga: el "
+"nuevo informe muestra lo que falta por aplicar."
+
+#: src/Form/UploadForm.php:24
+msgid "curriculo.json"
+msgstr "curriculo.json"
+
+#: src/Form/UploadForm.php:25
+msgid "The curriculum of the release."
+msgstr "El currículo de la versión."
+
+#: src/Form/UploadForm.php:33
+msgid "curriculo.json.sha256"
+msgstr "curriculo.json.sha256"
+
+#: src/Form/UploadForm.php:34
+msgid "Its checksum, in the format of sha256sum."
+msgstr "Su suma de comprobación, en el formato de sha256sum."
+
+#: src/Form/UploadForm.php:42
+msgid "cur.ttl"
+msgstr "cur.ttl"
+
+#: src/Form/UploadForm.php:43
+msgid "The cur vocabulary of the same release."
+msgstr "El vocabulario cur de la misma versión."
+
+#: src/Form/UploadForm.php:50
+msgid "Upload and analyze"
+msgstr "Subir y analizar"
 
 #: src/Entity/CurriculumImport.php:20
 msgid "analyzing"
@@ -40,3 +276,151 @@ msgstr "aplicada"
 #: src/Entity/CurriculumImport.php:27
 msgid "discarded"
 msgstr "descartada"
+
+#: src/Admin/ImportManager.php:36
+msgid "Another import is being analyzed or applied; wait until it finishes."
+msgstr "Hay otra carga analizándose o aplicándose; espera a que termine."
+
+#: src/Admin/ImportManager.php:119
+#, php-format
+msgid "The release publishes its URIs under %s, not under %s."
+msgstr "La versión publica sus URI bajo %s, no bajo %s."
+
+#: src/Admin/ImportManager.php:150
+msgid "This import cannot be analyzed now."
+msgstr "Esta carga no se puede analizar ahora."
+
+#: src/Admin/ImportManager.php:164
+msgid "Only an analyzed import without errors can be applied."
+msgstr "Solo se puede aplicar una carga analizada y sin errores."
+
+#: src/Admin/ImportManager.php:181
+msgid "Applied imports and imports in progress cannot be discarded."
+msgstr "Las cargas aplicadas y las que están en curso no se pueden descartar."
+
+#: src/Admin/ReportErrors.php:24
+#, php-format
+msgid "The item %s is in the curriculum item set but not in the release."
+msgstr "La ficha %s está en el conjunto del currículo pero no en la versión."
+
+#: src/Admin/ReportErrors.php:29
+#, php-format
+msgid "The item %s has the class %s, but its node is a %s."
+msgstr "La ficha %s tiene la clase %s, pero su nodo es de tipo %s."
+
+#: src/Admin/ReportErrors.php:34
+#, php-format
+msgid "The item %s is retired in Omeka but current in the release."
+msgstr "La ficha %s está retirada en Omeka pero vigente en la versión."
+
+#: src/Admin/ReportErrors.php:39
+#, php-format
+msgid "Several items of the curriculum item set have the identifier %s."
+msgstr "Varias fichas del conjunto del currículo tienen el identificador %s."
+
+#: src/Admin/ReportErrors.php:44
+msgid "An item of the curriculum item set has no literal dcterms:identifier."
+msgstr ""
+"Una ficha del conjunto del currículo no tiene un dcterms:identifier literal."
+
+#: src/Admin/ReportErrors.php:49
+#, php-format
+msgid "The node %s links through %s to %s, which is not in the release."
+msgstr "El nodo %s enlaza mediante %s con %s, que no está en la versión."
+
+#: src/Admin/ReportErrors.php:54
+#, php-format
+msgid "The new cur.ttl removes %s, which items use."
+msgstr "El nuevo cur.ttl elimina %s, que usan las fichas."
+
+#: src/Admin/ReportErrors.php:59
+#, php-format
+msgid "The release uses %s, which its cur.ttl does not define."
+msgstr "La versión usa %s, que su cur.ttl no define."
+
+#: src/Admin/ReportErrors.php:64
+#, php-format
+msgid "Unknown error %s."
+msgstr "Error desconocido %s."
+
+#: src/Release/Reader.php:28
+msgid "curriculo.json is not valid JSON."
+msgstr "curriculo.json no es un JSON válido."
+
+#: src/Release/Reader.php:35
+#, php-format
+msgid "corpus.version \"%s\" is not a version number like 1.1.2."
+msgstr "corpus.version «%s» no es un número de versión como 1.1.2."
+
+#: src/Release/Reader.php:53
+#, php-format
+msgid "Version %s is older than the loaded version %s."
+msgstr "La versión %s es anterior a la versión cargada %s."
+
+#: src/Release/Reader.php:64
+msgid "The checksum file must contain \"<sha256>  curriculo.json\"."
+msgstr ""
+"El fichero de suma de comprobación debe contener «<sha256>  curriculo.json»."
+
+#: src/Release/Reader.php:67
+msgid "The sha256 checksum does not match curriculo.json."
+msgstr "La suma sha256 no coincide con curriculo.json."
+
+#: src/Release/Reader.php:79 src/Release/Reader.php:90
+#, php-format
+msgid "curriculo.json has no %s."
+msgstr "curriculo.json no tiene %s."
+
+#: src/Release/Reader.php:96
+msgid "nodos must be a list."
+msgstr "nodos debe ser una lista."
+
+#: src/Release/Reader.php:100
+#, php-format
+msgid "Node %d in nodos has no id or tipo."
+msgstr "El nodo %d de nodos no tiene id o tipo."
+
+#: src/Release/Reader.php:110
+msgid "cur.ttl cannot be read."
+msgstr "No se puede leer cur.ttl."
+
+#: src/Release/Reader.php:114
+#, php-format
+msgid "cur.ttl does not declare the namespace %s."
+msgstr "cur.ttl no declara el espacio de nombres %s."
+
+#: src/Controller/Admin/IndexController.php:59
+msgid "Upload the three files of the release."
+msgstr "Sube los tres ficheros de la versión."
+
+#: src/Controller/Admin/IndexController.php:64
+#, php-format
+msgid "Release %s uploaded; its analysis has started."
+msgstr "Versión %s subida; ha comenzado su análisis."
+
+#: src/Controller/Admin/IndexController.php:112
+msgid "Apply"
+msgstr "Aplicar"
+
+#: src/Controller/Admin/IndexController.php:115
+msgid "Analyze again"
+msgstr "Volver a analizar"
+
+#: src/Controller/Admin/IndexController.php:118
+msgid "Discard"
+msgstr "Descartar"
+
+#: src/Controller/Admin/IndexController.php:135
+msgid ""
+"The release is being applied. This page shows the result when the job ends."
+msgstr ""
+"La versión se está aplicando. Esta página muestra el resultado cuando "
+"termine el trabajo."
+
+#: src/Controller/Admin/IndexController.php:144
+msgid "The import is being analyzed again."
+msgstr "La carga se está analizando de nuevo."
+
+#: src/Controller/Admin/IndexController.php:152
+msgid "Import discarded."
+msgstr "Carga descartada."
