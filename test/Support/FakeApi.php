@@ -10,6 +10,8 @@ class FakeApi
 {
     public $calls = [];
     private $found = [];
+    private $totals = [];
+    private $read = [];
     private $nextId = 1000;
 
     /**
@@ -26,10 +28,32 @@ class FakeApi
         return $this;
     }
 
+    /**
+     * Register the total of a search, as with limit 0.
+     */
+    public function willCount(string $resource, array $query, int $total): self
+    {
+        $this->totals[$this->key($resource, $query)] = $total;
+        return $this;
+    }
+
+    public function willRead(string $resource, int $id, FakeResource $content): self
+    {
+        $this->read[$resource][$id] = $content;
+        return $this;
+    }
+
     public function search($resource, array $query = [], array $options = [])
     {
         $this->calls[] = ['search', $resource, $query];
-        return new FakeResponse($this->found[$this->key($resource, $query)] ?? []);
+        $key = $this->key($resource, $query);
+        return new FakeResponse($this->found[$key] ?? [], $this->totals[$key] ?? null);
+    }
+
+    public function read($resource, $id, array $data = [], array $options = [])
+    {
+        $this->calls[] = ['read', $resource, $id];
+        return new FakeResponse($this->read[$resource][$id]);
     }
 
     public function create($resource, array $data = [], $fileData = [], array $options = [])

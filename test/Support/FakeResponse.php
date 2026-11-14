@@ -6,10 +6,12 @@ namespace EducationalCurriculumTest\Support;
 class FakeResponse
 {
     private $content;
+    private $total;
 
-    public function __construct($content)
+    public function __construct($content, ?int $total = null)
     {
         $this->content = $content;
+        $this->total = $total;
     }
 
     public function getContent()
@@ -19,6 +21,9 @@ class FakeResponse
 
     public function getTotalResults()
     {
+        if ($this->total !== null) {
+            return $this->total;
+        }
         return is_array($this->content) ? count($this->content) : 1;
     }
 }
