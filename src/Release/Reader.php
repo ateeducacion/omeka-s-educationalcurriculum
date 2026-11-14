@@ -35,13 +35,21 @@ class Reader
         }
         $nodes = $this->requireNodes($data);
         $this->checkVocabulary($vocabularyPath, $uriBase);
+        self::checkNotOlder($version, $loadedVersion);
+
+        return new Release($version, $uriBase, $licenseUrl, $nodes, $vocabularyPath);
+    }
+
+    /**
+     * @throws ReleaseException When the version is older than the loaded one
+     */
+    public static function checkNotOlder(string $version, ?string $loadedVersion): void
+    {
         if ($loadedVersion !== null && version_compare($version, $loadedVersion, '<')) {
             throw new ReleaseException(
                 sprintf('Version %s is older than the loaded version %s.', $version, $loadedVersion)
             );
         }
-
-        return new Release($version, $uriBase, $licenseUrl, $nodes, $vocabularyPath);
     }
 
     private function checkChecksum(string $jsonPath, string $checksumPath): void

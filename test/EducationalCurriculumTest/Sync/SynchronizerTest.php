@@ -102,6 +102,17 @@ class SynchronizerTest extends TestCase
         );
     }
 
+    public function testAnalysisSavesEachListOneEntryPerLine(): void
+    {
+        $plan = $this->synchronizer()->analyze($this->dir);
+
+        $lines = file($this->dir . '/nuevos.jsonl', FILE_IGNORE_NEW_LINES);
+        $this->assertCount(125, $lines);
+        $this->assertSame($plan->getNew()[0], json_decode($lines[0], true));
+        $this->assertSame('', file_get_contents($this->dir . '/modificados.jsonl'));
+        $this->assertSame('', file_get_contents($this->dir . '/retirados.jsonl'));
+    }
+
     public function testAnalysisComparesWithTheItemsOfTheCurriculumItemSet(): void
     {
         $this->structureWriter = $this->createMock(StructureWriter::class);

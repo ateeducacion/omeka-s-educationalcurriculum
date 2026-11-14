@@ -12,12 +12,18 @@ use EducationalCurriculum\Release\Release;
  * Analyzes and applies the release stored in the directory of an import.
  *
  * The directory holds the uploaded files (curriculo.json, curriculo.json.sha256 and cur.ttl) and
- * the analysis: informe.json, the full report, and resumen.json, what the import page shows.
+ * the analysis: informe.json, the full report; resumen.json, what the import page shows; and the
+ * lists of the report as JSON Lines, which the page reads one page at a time.
  */
 class Synchronizer
 {
     const REPORT = 'informe.json';
     const SUMMARY = 'resumen.json';
+
+    /**
+     * Lists of the report, one JSON entry per line, so a page of them is read without the rest.
+     */
+    const LISTS = ['new' => 'nuevos.jsonl', 'modified' => 'modificados.jsonl', 'retired' => 'retirados.jsonl'];
 
     private $reader;
     private $state;
@@ -65,6 +71,14 @@ class Synchronizer
             'vocabulary' => $plan->getVocabulary(),
             'errors' => $plan->getErrors(),
         ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
+        $lists = ['new' => $plan->getNew(), 'modified' => $plan->getModified(), 'retired' => $plan->getRetired()];
+        foreach (self::LISTS as $list => $file) {
+            $handle = fopen($directory . '/' . $file, 'w');
+            foreach ($lists[$list] as $entry) {
+                fwrite($handle, json_encode($entry, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n");
+            }
+            fclose($handle);
+        }
         return $plan;
     }
 
