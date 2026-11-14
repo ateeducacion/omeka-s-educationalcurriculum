@@ -22,7 +22,7 @@ jobs:
       - name: Upload ZIP to the release
         uses: softprops/action-gh-release@v3
         with:
-          files: ModuleTemplate-${{ env.RELEASE_TAG }}.zip
+          files: EducationalCurriculum-${{ env.RELEASE_TAG }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

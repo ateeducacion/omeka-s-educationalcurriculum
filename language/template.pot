@@ -1,83 +1,418 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
 #, fuzzy
 msgid ""
 msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-14 17:05+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/Form/ConfigForm.php:18
-msgid "DEMO: enable feature"
+#: view/educational-curriculum/admin/index/index.phtml:10
+#: view/educational-curriculum/admin/index/show.phtml:17
+#: view/educational-curriculum/admin/index/show.phtml:21
+msgid "[None]"
 msgstr ""
 
-#: src/Form/ConfigForm.php:19
-msgid "Demo field to test checkbox behavior."
+#: view/educational-curriculum/admin/index/index.phtml:14
+#: view/educational-curriculum/admin/index/show.phtml:69
+#: view/educational-curriculum/admin/index/upload.phtml:11
+msgid "Curriculum"
 msgstr ""
 
-#: src/Form/ConfigForm.php:34
-msgid "DEMO: free text"
+#: view/educational-curriculum/admin/index/index.phtml:18
+#: view/educational-curriculum/admin/index/upload.phtml:11
+msgid "Upload release"
 msgstr ""
 
-#: src/Form/ConfigForm.php:35
-msgid "Demo field to test single-line input."
+#: view/educational-curriculum/admin/index/index.phtml:26
+msgid "Loaded version"
 msgstr ""
 
-#: src/Form/ConfigForm.php:47
-msgid "DEMO: textarea"
+#: view/educational-curriculum/admin/index/index.phtml:28
+msgid "No release loaded yet"
 msgstr ""
 
-#: src/Form/ConfigForm.php:48
-msgid "Demo field to test multi-line input."
+#: view/educational-curriculum/admin/index/index.phtml:32
+msgid "Applied"
 msgstr ""
 
-#: src/Form/ConfigForm.php:60
-msgid "DEMO: number (px)"
+#: view/educational-curriculum/admin/index/index.phtml:36
+msgid "Current terms"
 msgstr ""
 
-#: src/Form/ConfigForm.php:61
-msgid "Demo field to test numeric input."
+#: view/educational-curriculum/admin/index/index.phtml:40
+msgid "Retired terms"
 msgstr ""
 
-#: src/Form/ConfigForm.php:75
-msgid "DEMO: select"
+#: view/educational-curriculum/admin/index/index.phtml:45
+msgid "Imports"
 msgstr ""
 
-#: src/Form/ConfigForm.php:76
-msgid "Demo field to test dropdown selection."
+#: view/educational-curriculum/admin/index/index.phtml:50
+msgid "Import"
 msgstr ""
 
-#: src/Form/ConfigForm.php:78
-msgid "Option A"
+#: view/educational-curriculum/admin/index/index.phtml:51
+msgid "Version"
 msgstr ""
 
-#: src/Form/ConfigForm.php:79
-msgid "Option B"
+#: view/educational-curriculum/admin/index/index.phtml:52
+#: view/educational-curriculum/admin/index/show.phtml:86
+msgid "Status"
 msgstr ""
 
-#: src/Form/ConfigForm.php:80
-msgid "Option C"
+#: view/educational-curriculum/admin/index/index.phtml:53
+#: view/educational-curriculum/admin/index/show.phtml:90
+msgid "Uploaded"
 msgstr ""
 
-#: src/Form/ConfigForm.php:90
-msgid "DEMO: color"
+#: view/educational-curriculum/admin/index/index.phtml:54
+msgid "Updated"
 msgstr ""
 
-#: src/Form/ConfigForm.php:91
-msgid "Demo field to test color picker."
+#: view/educational-curriculum/admin/index/index.phtml:55
+msgid "Owner"
 msgstr ""
 
-#: src/Form/ConfigForm.php:100
-msgid "DEMO: email address"
+#: view/educational-curriculum/admin/index/index.phtml:71
+msgid "[No owner]"
 msgstr ""
 
-#: src/Form/ConfigForm.php:101
-msgid "Demo field to test email input."
+#: view/educational-curriculum/admin/index/index.phtml:78
+msgid "No release has been uploaded yet."
 msgstr ""
 
-#: src/Form/ConfigForm.php:110
-msgid "DEMO: URL"
+#: view/educational-curriculum/admin/index/show.phtml:60
+#: view/educational-curriculum/admin/index/show.phtml:141
+msgid "New"
 msgstr ""
 
-#: src/Form/ConfigForm.php:111
-msgid "Demo field to test URL input."
+#: view/educational-curriculum/admin/index/show.phtml:61
+#: view/educational-curriculum/admin/index/show.phtml:142
+msgid "Modified"
 msgstr ""
 
+#: view/educational-curriculum/admin/index/show.phtml:62
+#: view/educational-curriculum/admin/index/show.phtml:143
+msgid "Retired"
+msgstr ""
+
+#: view/educational-curriculum/admin/index/show.phtml:67
+#, php-format
+msgid "Release %s"
+msgstr ""
+
+#: view/educational-curriculum/admin/index/show.phtml:97
+msgid "Analysis job"
+msgstr ""
+
+#: view/educational-curriculum/admin/index/show.phtml:101
+msgid "Apply job"
+msgstr ""
+
+#: view/educational-curriculum/admin/index/show.phtml:108
+msgid "Report"
+msgstr ""
+
+#: view/educational-curriculum/admin/index/show.phtml:110
+msgid "No changes: the items and the vocabulary already match this release."
+msgstr ""
+
+#: view/educational-curriculum/admin/index/show.phtml:113
+#, php-format
+msgid "%1$s new, %2$s modified and %3$s retired items."
+msgstr ""
+
+#: view/educational-curriculum/admin/index/show.phtml:121
+msgid "Errors"
+msgstr ""
+
+#: view/educational-curriculum/admin/index/show.phtml:136
+msgid "By type of node"
+msgstr ""
+
+#: view/educational-curriculum/admin/index/show.phtml:140
+#: view/educational-curriculum/admin/index/show.phtml:200
+msgid "Class"
+msgstr ""
+
+#: view/educational-curriculum/admin/index/show.phtml:144
+msgid "Unchanged"
+msgstr ""
+
+#: view/educational-curriculum/admin/index/show.phtml:162
+msgid "Vocabulary cur"
+msgstr ""
+
+#: view/educational-curriculum/admin/index/show.phtml:166
+msgid "New terms"
+msgstr ""
+
+#: view/educational-curriculum/admin/index/show.phtml:172
+msgid "Removed terms"
+msgstr ""
+
+#: view/educational-curriculum/admin/index/show.phtml:180
+msgid "Items"
+msgstr ""
+
+#: view/educational-curriculum/admin/index/show.phtml:199
+msgid "Identifier"
+msgstr ""
+
+#: view/educational-curriculum/admin/index/show.phtml:201
+msgid "Label"
+msgstr ""
+
+#: view/educational-curriculum/admin/index/show.phtml:201
+msgid "Changes"
+msgstr ""
+
+#: view/educational-curriculum/admin/index/show.phtml:231
+msgid "No items in this list."
+msgstr ""
+
+#: view/educational-curriculum/admin/index/upload.phtml:13
+msgid ""
+"Upload the three files of a published release. They are checked first; if "
+"they are valid, the release is analyzed in the background and nothing "
+"changes until you apply it."
+msgstr ""
+
+#: view/educational-curriculum/admin/index/show.phtml:53
+msgid "The release is being analyzed. Reload this page to see the report."
+msgstr ""
+
+#: view/educational-curriculum/admin/index/show.phtml:54
+msgid "The release is being applied. Reload this page to see the result."
+msgstr ""
+
+#: view/educational-curriculum/admin/index/show.phtml:55
+msgid "The report has errors that must be solved before applying the release."
+msgstr ""
+
+#: view/educational-curriculum/admin/index/show.phtml:56
+msgid ""
+"The items or the vocabulary changed after the analysis, or the analysis "
+"failed. Analyze the import again before applying it."
+msgstr ""
+
+#: view/educational-curriculum/admin/index/show.phtml:57
+msgid ""
+"Applying the release was interrupted. Analyze the import again: the new "
+"report shows what is left to apply."
+msgstr ""
+
+#: src/Form/UploadForm.php:24
+msgid "curriculo.json"
+msgstr ""
+
+#: src/Form/UploadForm.php:25
+msgid "The curriculum of the release."
+msgstr ""
+
+#: src/Form/UploadForm.php:33
+msgid "curriculo.json.sha256"
+msgstr ""
+
+#: src/Form/UploadForm.php:34
+msgid "Its checksum, in the format of sha256sum."
+msgstr ""
+
+#: src/Form/UploadForm.php:42
+msgid "cur.ttl"
+msgstr ""
+
+#: src/Form/UploadForm.php:43
+msgid "The cur vocabulary of the same release."
+msgstr ""
+
+#: src/Form/UploadForm.php:50
+msgid "Upload and analyze"
+msgstr ""
+
+#: src/Entity/CurriculumImport.php:20
+msgid "analyzing"
+msgstr ""
+
+#: src/Entity/CurriculumImport.php:21
+msgid "ready"
+msgstr ""
+
+#: src/Entity/CurriculumImport.php:22
+msgid "blocked"
+msgstr ""
+
+#: src/Entity/CurriculumImport.php:23
+msgid "stale"
+msgstr ""
+
+#: src/Entity/CurriculumImport.php:24
+msgid "applying"
+msgstr ""
+
+#: src/Entity/CurriculumImport.php:25
+msgid "interrupted"
+msgstr ""
+
+#: src/Entity/CurriculumImport.php:26
+msgid "applied"
+msgstr ""
+
+#: src/Entity/CurriculumImport.php:27
+msgid "discarded"
+msgstr ""
+
+#: src/Admin/ImportManager.php:36
+msgid "Another import is being analyzed or applied; wait until it finishes."
+msgstr ""
+
+#: src/Admin/ImportManager.php:119
+#, php-format
+msgid "The release publishes its URIs under %s, not under %s."
+msgstr ""
+
+#: src/Admin/ImportManager.php:150
+msgid "This import cannot be analyzed now."
+msgstr ""
+
+#: src/Admin/ImportManager.php:164
+msgid "Only an analyzed import without errors can be applied."
+msgstr ""
+
+#: src/Admin/ImportManager.php:181
+msgid "Applied imports and imports in progress cannot be discarded."
+msgstr ""
+
+#: src/Admin/ReportErrors.php:24
+#, php-format
+msgid "The item %s is in the curriculum item set but not in the release."
+msgstr ""
+
+#: src/Admin/ReportErrors.php:29
+#, php-format
+msgid "The item %s has the class %s, but its node is a %s."
+msgstr ""
+
+#: src/Admin/ReportErrors.php:34
+#, php-format
+msgid "The item %s is retired in Omeka but current in the release."
+msgstr ""
+
+#: src/Admin/ReportErrors.php:39
+#, php-format
+msgid "Several items of the curriculum item set have the identifier %s."
+msgstr ""
+
+#: src/Admin/ReportErrors.php:44
+msgid "An item of the curriculum item set has no literal dcterms:identifier."
+msgstr ""
+
+#: src/Admin/ReportErrors.php:49
+#, php-format
+msgid "The node %s links through %s to %s, which is not in the release."
+msgstr ""
+
+#: src/Admin/ReportErrors.php:54
+#, php-format
+msgid "The new cur.ttl removes %s, which items use."
+msgstr ""
+
+#: src/Admin/ReportErrors.php:59
+#, php-format
+msgid "The release uses %s, which its cur.ttl does not define."
+msgstr ""
+
+#: src/Admin/ReportErrors.php:64
+#, php-format
+msgid "Unknown error %s."
+msgstr ""
+
+#: src/Release/Reader.php:28
+msgid "curriculo.json is not valid JSON."
+msgstr ""
+
+#: src/Release/Reader.php:35
+#, php-format
+msgid "corpus.version \"%s\" is not a version number like 1.1.2."
+msgstr ""
+
+#: src/Release/Reader.php:53
+#, php-format
+msgid "Version %s is older than the loaded version %s."
+msgstr ""
+
+#: src/Release/Reader.php:64
+msgid "The checksum file must contain \"<sha256>  curriculo.json\"."
+msgstr ""
+
+#: src/Release/Reader.php:67
+msgid "The sha256 checksum does not match curriculo.json."
+msgstr ""
+
+#: src/Release/Reader.php:79 src/Release/Reader.php:90
+#, php-format
+msgid "curriculo.json has no %s."
+msgstr ""
+
+#: src/Release/Reader.php:96
+msgid "nodos must be a list."
+msgstr ""
+
+#: src/Release/Reader.php:100
+#, php-format
+msgid "Node %d in nodos has no id or tipo."
+msgstr ""
+
+#: src/Release/Reader.php:110
+msgid "cur.ttl cannot be read."
+msgstr ""
+
+#: src/Release/Reader.php:114
+#, php-format
+msgid "cur.ttl does not declare the namespace %s."
+msgstr ""
+
+#: src/Controller/Admin/IndexController.php:59
+msgid "Upload the three files of the release."
+msgstr ""
+
+#: src/Controller/Admin/IndexController.php:64
+#, php-format
+msgid "Release %s uploaded; its analysis has started."
+msgstr ""
+
+#: src/Controller/Admin/IndexController.php:112
+msgid "Apply"
+msgstr ""
+
+#: src/Controller/Admin/IndexController.php:115
+msgid "Analyze again"
+msgstr ""
+
+#: src/Controller/Admin/IndexController.php:118
+msgid "Discard"
+msgstr ""
+
+#: src/Controller/Admin/IndexController.php:135
+msgid ""
+"The release is being applied. This page shows the result when the job ends."
+msgstr ""
+
+#: src/Controller/Admin/IndexController.php:144
+msgid "The import is being analyzed again."
+msgstr ""
+
+#: src/Controller/Admin/IndexController.php:152
+msgid "Import discarded."
+msgstr ""

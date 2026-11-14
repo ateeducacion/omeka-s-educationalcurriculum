@@ -1,20 +1,68 @@
 <?php
 declare(strict_types=1);
 
-namespace ModuleTemplate;
-
-//use ThreeDViewer\Media\FileRenderer\Viewer3DRenderer;
+namespace EducationalCurriculum;
 
 return [
-    'view_manager' => [
-        'template_path_stack' => [
-            dirname(__DIR__) . '/view',
+    'entity_manager' => [
+        'mapping_classes_paths' => [
+            dirname(__DIR__) . '/src/Entity',
+        ],
+    ],
+    'service_manager' => [
+        'factories' => [
+            Sync\Synchronizer::class => Service\SynchronizerFactory::class,
+            Admin\ImportManager::class => Service\ImportManagerFactory::class,
+        ],
+    ],
+    // Registered controllers are ACL resources; only global administrators may use this one.
+    'controllers' => [
+        'factories' => [
+            Controller\Admin\IndexController::class => Service\Controller\Admin\IndexControllerFactory::class,
         ],
     ],
     'form_elements' => [
         'invokables' => [
-            Form\SettingsFieldset::class => Form\SettingsFieldset::class,
-            Form\SiteSettingsFieldset::class => Form\SiteSettingsFieldset::class,
+            Form\UploadForm::class => Form\UploadForm::class,
+        ],
+    ],
+    'router' => [
+        'routes' => [
+            'admin' => [
+                'child_routes' => [
+                    'educational-curriculum' => [
+                        'type' => \Laminas\Router\Http\Segment::class,
+                        'options' => [
+                            'route' => '/educational-curriculum[/:action[/:id]]',
+                            'constraints' => [
+                                'action' => 'index|upload|show|apply|analyze|discard',
+                                'id' => '\d+',
+                            ],
+                            'defaults' => [
+                                '__NAMESPACE__' => 'EducationalCurriculum\Controller\Admin',
+                                'controller' => Controller\Admin\IndexController::class,
+                                'action' => 'index',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+    'navigation' => [
+        'AdminModule' => [
+            [
+                'label' => 'Curriculum', // @translate
+                'class' => 'o-icon-items',
+                'route' => 'admin/educational-curriculum',
+                'resource' => Controller\Admin\IndexController::class,
+                'privilege' => 'index',
+            ],
+        ],
+    ],
+    'view_manager' => [
+        'template_path_stack' => [
+            dirname(__DIR__) . '/view',
         ],
     ],
     'translator' => [
@@ -27,18 +75,9 @@ return [
             ],
         ],
     ],
-    'ModuleTemplate' => [
-        'settings' => [
-            'activate_ModuleTemplate' => true,
-            // Demo defaults so the form shows meaningful values
-            'moduletemplate_demo_toggle' => false,
-            'moduletemplate_demo_text' => 'Default text',
-            'moduletemplate_demo_textarea' => "Line 1\nLine 2",
-            'moduletemplate_demo_number' => 500,
-            'moduletemplate_demo_select' => 'b',
-            'moduletemplate_demo_color' => '#3366ff',
-            'moduletemplate_demo_email' => 'demo@example.com',
-            'moduletemplate_demo_url' => 'https://example.com',
-        ]
+    'educationalcurriculum' => [
+        // Base of the published URIs of the curriculum (corpus.uri_base), from the contract in the
+        // curriculum repository. It locates the item sets before any upload.
+        'uri_base' => 'https://ateeducacion.github.io/curriculo_lomloe_canarias/',
     ],
 ];

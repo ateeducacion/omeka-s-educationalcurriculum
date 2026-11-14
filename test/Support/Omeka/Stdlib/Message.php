@@ -6,14 +6,21 @@ namespace Omeka\Stdlib;
 class Message
 {
     private $message;
+    private $args;
 
-    public function __construct(string $message)
+    public function __construct($message, ...$args)
     {
         $this->message = $message;
+        $this->args = $args;
     }
 
-    public function __toString(): string
+    public function getMessage()
     {
         return $this->message;
+    }
+
+    public function getArgs()
+    {
+        return $this->args;
     }
 }

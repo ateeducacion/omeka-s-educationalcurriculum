@@ -72,7 +72,7 @@ shell: check-docker
 clean: check-docker
 	docker compose down -v --remove-orphans
 
-# Generate the ModuleTemplate-X.X.X.zip package
+# Generate the EducationalCurriculum-X.X.X.zip package
 package:
 	@if [ -z "$(VERSION)" ]; then \
 		echo "Error: VERSION not specified. Use 'make package VERSION=1.2.3'"; \
@@ -80,8 +80,8 @@ package:
 	fi
 	@echo "Updating version to $(VERSION) in module.ini..."
 	$(SED_INPLACE) 's/^\([[:space:]]*version[[:space:]]*=[[:space:]]*\).*$$/\1"$(VERSION)"/' config/module.ini
-	@echo "Creating ZIP archive: ModuleTemplate-$(VERSION).zip..."
-	composer archive --format=zip --file="ModuleTemplate-$(VERSION)"
+	@echo "Creating ZIP archive: EducationalCurriculum-$(VERSION).zip..."
+	composer archive --format=zip --file="EducationalCurriculum-$(VERSION)"
 	@echo "Restoring version to 0.0.0 in module.ini..."
 	$(SED_INPLACE) 's/^\([[:space:]]*version[[:space:]]*=[[:space:]]*\).*$$/\1"0.0.0"/' config/module.ini
 
@@ -186,8 +186,7 @@ help:
 	@echo "Packaging:"
 	@echo "  package           - Generate a .zip package of the module with version tag"
 	@echo ""
-	@echo "Data & module:"
-	@echo "  import-sample     - Import sample CSV inside the container"
+	@echo "Module:"
 	@echo "  enable-module     - Enable this module inside Omeka S"
 	@echo ""
 	@echo "Dependencies:"
@@ -244,13 +243,9 @@ ps:
 
 fresh: clean upd
 
-import-sample:
-	@echo "Importing sample CSV inside the container..."
-	docker compose exec omekas sh -lc 'php import_cli.php "$$OMEKA_CSV_IMPORT_FILE"'
-
 enable-module:
-	@echo "Enabling ModuleTemplate module inside Omeka S..."
-	docker compose exec omekas sh -lc 'omeka-s-cli module:install ModuleTemplate || true'
+	@echo "Enabling EducationalCurriculum module inside Omeka S..."
+	docker compose exec omekas sh -lc 'omeka-s-cli module:install EducationalCurriculum || true'
 
 # Generate coverage for all module code and enforce the CI threshold.
 .PHONY: test-coverage

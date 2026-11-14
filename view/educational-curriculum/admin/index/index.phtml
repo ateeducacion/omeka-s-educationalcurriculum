@@ -1,0 +1,80 @@
+<?php
+/**
+ * @var \Laminas\View\Renderer\PhpRenderer $this
+ * @var array $overview
+ */
+$translate = $this->plugin('translate');
+$escape = $this->plugin('escapeHtml');
+$this->htmlElement('body')->appendAttribute('class', 'educational-curriculum browse');
+$date = function ($value) use ($translate) {
+    return $value ? $this->i18n()->dateFormat($value, 'medium', 'short') : $translate('[None]');
+};
+?>
+
+<?php echo $this->pageTitle($translate('Curriculum')); ?>
+
+<div id="page-actions">
+    <?php echo $this->hyperlink(
+        $translate('Upload release'),
+        $this->url('admin/educational-curriculum', ['action' => 'upload']),
+        ['class' => 'button']
+    ); ?>
+</div>
+
+<dl class="educational-curriculum-overview">
+    <div class="meta-group">
+        <dt><?php echo $translate('Loaded version'); ?></dt>
+        <dd class="value"><?php echo $overview['version'] === null
+            ? $translate('No release loaded yet')
+            : $escape($overview['version']); ?></dd>
+    </div>
+    <div class="meta-group">
+        <dt><?php echo $translate('Applied'); ?></dt>
+        <dd class="value"><?php echo $escape($date($overview['appliedAt'])); ?></dd>
+    </div>
+    <div class="meta-group">
+        <dt><?php echo $translate('Current terms'); ?></dt>
+        <dd class="value"><?php echo $escape((int) $overview['active']); ?></dd>
+    </div>
+    <div class="meta-group">
+        <dt><?php echo $translate('Retired terms'); ?></dt>
+        <dd class="value"><?php echo $escape((int) $overview['retired']); ?></dd>
+    </div>
+</dl>
+
+<h2><?php echo $translate('Imports'); ?></h2>
+<?php if ($overview['imports']): ?>
+<table class="tablesaw" data-tablesaw-mode="stack">
+    <thead>
+        <tr>
+            <th><?php echo $translate('Import'); ?></th>
+            <th><?php echo $translate('Version'); ?></th>
+            <th><?php echo $translate('Status'); ?></th>
+            <th><?php echo $translate('Uploaded'); ?></th>
+            <th><?php echo $translate('Updated'); ?></th>
+            <th><?php echo $translate('Owner'); ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($overview['imports'] as $import): ?>
+        <tr>
+            <td><?php echo $this->hyperlink(
+                '#' . $import->getId(),
+                $this->url('admin/educational-curriculum', ['action' => 'show', 'id' => $import->getId()])
+            ); ?></td>
+            <td><?php echo $escape($import->getVersion()); ?></td>
+            <td><?php echo $escape($translate($import->getStatus())); ?></td>
+            <td><?php echo $escape($date($import->getCreated())); ?></td>
+            <td><?php echo $escape($date($import->getModified())); ?></td>
+            <td><?php echo $import->getOwner()
+                ? $escape($import->getOwner()->getEmail())
+                : $translate('[No owner]'); ?></td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+<?php else: ?>
+<div class="no-resources">
+    <p><?php echo $translate('No release has been uploaded yet.'); ?></p>
+</div>
+<?php endif; ?>

@@ -1,23 +1,21 @@
 <?php
 declare(strict_types=1);
 
-namespace ModuleTemplate;
+namespace EducationalCurriculum;
 
-use Laminas\EventManager\Event;
-use Laminas\EventManager\SharedEventManagerInterface;
+use FilesystemIterator;
 use Laminas\ServiceManager\ServiceLocatorInterface;
-use Laminas\Mvc\Controller\AbstractController;
-use Laminas\View\Renderer\PhpRenderer;
 use Omeka\Module\AbstractModule;
-use Omeka\Mvc\Controller\Plugin\Messenger;
-use Omeka\Stdlib\Message;
-use ModuleTemplate\Form\ConfigForm;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 /**
- * Main class for the module.
+ * Loads published releases of the LOMLOE Canary Islands curriculum into Omeka S.
  */
 class Module extends AbstractModule
 {
+    const SKOS_NAMESPACE = 'http://www.w3.org/2004/02/skos/core#';
+
     /**
      * Retrieve the configuration array.
      *
@@ -29,100 +27,83 @@ class Module extends AbstractModule
     }
 
     /**
-     * Execute logic when the module is installed.
+     * Create the table of curriculum imports and install the SKOS vocabulary if it is missing.
      *
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ServiceLocatorInterface $services
      */
-    public function install(ServiceLocatorInterface $serviceLocator)
+    public function install(ServiceLocatorInterface $services)
     {
-        $messenger = new Messenger();
-        $message = new Message("ModuleTemplate module installed.");
-        $messenger->addSuccess($message);
-    }
-    /**
-     * Execute logic when the module is uninstalled.
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     */
-    public function uninstall(ServiceLocatorInterface $serviceLocator)
-    {
-        $messenger = new Messenger();
-        $message = new Message("ModuleTemplate module uninstalled.");
-        $messenger->addWarning($message);
-    }
-    
-    /**
-     * Register the file validator service and renderers.
-     *
-     * @param SharedEventManagerInterface $sharedEventManager
-     */
-    public function attachListeners(SharedEventManagerInterface $sharedEventManager): void
-    {
-        // Replace the default file validator with our custom one
-    }
-    
-    /**
-     * Get the configuration form for this module.
-     *
-     * @param PhpRenderer $renderer
-     * @return string
-     */
-    public function getConfigForm(PhpRenderer $renderer)
-    {
-        $services = $this->getServiceLocator();
-        $config = $services->get('Config');
-        $settings = $services->get('Omeka\Settings');
-        
-        $form = new ConfigForm();
-        $form->init();
-
-        // Seed form fields with saved settings or defaults
-        $form->setData([
-            'activate_ModuleTemplate_cb' => $settings->get('activate_ModuleTemplate', 1),
-            'moduletemplate_demo_toggle' => $settings->get('moduletemplate_demo_toggle', false) ? '1' : '0',
-            'moduletemplate_demo_text' => $settings->get('moduletemplate_demo_text', 'Default text'),
-            'moduletemplate_demo_textarea' => $settings->get('moduletemplate_demo_textarea', "Line 1\nLine 2"),
-            'moduletemplate_demo_number' => $settings->get('moduletemplate_demo_number', 500),
-            'moduletemplate_demo_select' => $settings->get('moduletemplate_demo_select', 'b'),
-            'moduletemplate_demo_color' => $settings->get('moduletemplate_demo_color', '#3366ff'),
-            'moduletemplate_demo_email' => $settings->get('moduletemplate_demo_email', 'demo@example.com'),
-            'moduletemplate_demo_url' => $settings->get('moduletemplate_demo_url', 'https://example.com'),
-        ]);
-        
-        return $renderer->formCollection($form, false);
-    }
-    
-    /**
-     * Handle the configuration form submission.
-     *
-     * @param AbstractController $controller
-     */
-    public function handleConfigForm(AbstractController $controller)
-    {
-        $services = $this->getServiceLocator();
-        $settings = $services->get('Omeka\Settings');
-        
-        $config = $controller->params()->fromPost();
-
-        $value = isset($config['activate_ModuleTemplate_cb']) ? $config['activate_ModuleTemplate_cb'] : 0;
-        $settings->set('activate_ModuleTemplate', $value);
-
-        // Persist demo settings (cast/basic normalization)
-        $settings->set(
-            'moduletemplate_demo_toggle',
-            isset($config['moduletemplate_demo_toggle'])
-                && $config['moduletemplate_demo_toggle'] === '1'
-        );
-        $settings->set('moduletemplate_demo_text', (string)($config['moduletemplate_demo_text'] ?? ''));
-        $settings->set('moduletemplate_demo_textarea', (string)($config['moduletemplate_demo_textarea'] ?? ''));
-        if (isset($config['moduletemplate_demo_number']) && is_numeric($config['moduletemplate_demo_number'])) {
-            $settings->set('moduletemplate_demo_number', (int)$config['moduletemplate_demo_number']);
+        $connection = $services->get('Omeka\Connection');
+        $schema = file_get_contents(__DIR__ . '/data/install/schema.sql');
+        foreach (array_filter(array_map('trim', explode(";\n", $schema))) as $sql) {
+            $connection->executeStatement($sql);
         }
-        $settings->set('moduletemplate_demo_select', (string)($config['moduletemplate_demo_select'] ?? ''));
-        $settings->set('moduletemplate_demo_color', (string)($config['moduletemplate_demo_color'] ?? ''));
-        $settings->set('moduletemplate_demo_email', (string)($config['moduletemplate_demo_email'] ?? ''));
-        $settings->set('moduletemplate_demo_url', (string)($config['moduletemplate_demo_url'] ?? ''));
+        $this->installSkos($services);
     }
-    
-    // /**
+
+    /**
+     * Drop the table of imports and their uploaded files.
+     *
+     * Items, item sets, resource templates and vocabularies are kept: other modules use them.
+     *
+     * @param ServiceLocatorInterface $services
+     */
+    public function uninstall(ServiceLocatorInterface $services)
+    {
+        $services->get('Omeka\Connection')->executeStatement('DROP TABLE IF EXISTS curriculum_import');
+        $this->removeDirectory(self::filesPath($services->get('Config')));
+    }
+
+    /**
+     * Directory where the files of each import are stored, one subdirectory per import id.
+     *
+     * @param array $config The application configuration
+     */
+    public static function filesPath(array $config): string
+    {
+        $basePath = $config['file_store']['local']['base_path'] ?? null;
+        if ($basePath === null) {
+            $basePath = OMEKA_PATH . '/files';
+        }
+        return $basePath . '/educationalcurriculum';
+    }
+
+    /**
+     * Import the bundled SKOS vocabulary unless one with its namespace is already installed.
+     */
+    private function installSkos(ServiceLocatorInterface $services): void
+    {
+        $api = $services->get('Omeka\ApiManager');
+        if ($api->search('vocabularies', ['namespace_uri' => self::SKOS_NAMESPACE])->getTotalResults() > 0) {
+            return;
+        }
+        $services->get('Omeka\RdfImporter')->import('file', [
+            'o:namespace_uri' => self::SKOS_NAMESPACE,
+            'o:prefix' => 'skos',
+            'o:label' => 'SKOS',
+            'o:comment' => 'Simple Knowledge Organization System',
+        ], [
+            'file' => __DIR__ . '/data/vocabularies/skos.rdf',
+            'format' => 'rdfxml',
+        ]);
+    }
+
+    private function removeDirectory(string $path): void
+    {
+        if (!is_dir($path) || is_link($path)) {
+            return;
+        }
+        $entries = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::CHILD_FIRST
+        );
+        foreach ($entries as $entry) {
+            if ($entry->isDir() && !$entry->isLink()) {
+                rmdir($entry->getPathname());
+            } else {
+                unlink($entry->getPathname());
+            }
+        }
+        rmdir($path);
+    }
 }

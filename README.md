@@ -1,31 +1,65 @@
-# Omeka S Module Template
+# Omeka S Educational Curriculum
 
-[![codecov](https://codecov.io/gh/ateeducacion/omeka-s-ModuleTemplate/branch/main/graph/badge.svg)](https://codecov.io/gh/ateeducacion/omeka-s-ModuleTemplate)
+[![codecov](https://codecov.io/gh/ateeducacion/omeka-s-educationalcurriculum/branch/main/graph/badge.svg)](https://codecov.io/gh/ateeducacion/omeka-s-educationalcurriculum)
 
-
-<a href="https://ateeducacion.github.io/omeka-s-playground/?blueprint=https%3A%2F%2Fraw.githubusercontent.com%2Fateeducacion%2Fomeka-s-ModuleTemplate%2Frefs%2Fheads%2Fmain%2Fblueprint.json">
-  <img src="https://raw.githubusercontent.com/ateeducacion/omeka-s-ModuleTemplate/refs/heads/main/.github/assets/playground-preview-button.svg" alt="Try ModuleTemplate in your browser" width="224">
+<a href="https://ateeducacion.github.io/omeka-s-playground/?blueprint=https%3A%2F%2Fraw.githubusercontent.com%2Fateeducacion%2Fomeka-s-educationalcurriculum%2Frefs%2Fheads%2Fmain%2Fblueprint.json">
+  <img src="https://raw.githubusercontent.com/ateeducacion/omeka-s-educationalcurriculum/refs/heads/main/.github/assets/playground-preview-button.svg" alt="Try EducationalCurriculum in your browser" width="224">
 </a><br>
-<small><a href="https://ateeducacion.github.io/omeka-s-playground/?blueprint=https%3A%2F%2Fraw.githubusercontent.com%2Fateeducacion%2Fomeka-s-ModuleTemplate%2Frefs%2Fheads%2Fmain%2Fblueprint.json">Try in your browser</a></small>
+<small><a href="https://ateeducacion.github.io/omeka-s-playground/?blueprint=https%3A%2F%2Fraw.githubusercontent.com%2Fateeducacion%2Fomeka-s-educationalcurriculum%2Frefs%2Fheads%2Fmain%2Fblueprint.json">Try in your browser</a></small>
 
-![Screenshot of the module](https://raw.githubusercontent.com/ateeducacion/omeka-s-ModuleTemplate/refs/heads/main/.github/assets/screenshot.png)
+Omeka S module that loads a published release of the LOMLOE Canary Islands curriculum into an
+Omeka S instance, following the Omeka contract of the
+[curriculum repository](https://github.com/ateeducacion/curriculo_lomloe_canarias)
+(`docs/omeka.md`): one item per node of `curriculo.json`, with the `cur` classes and the SKOS
+properties, in the item set «Currículo LOMLOE de Canarias». Applying the same release twice
+changes nothing.
 
-This repository provides a minimal, modern template for building custom modules for Omeka S. It includes a Docker-based dev environment, packaging helpers, i18n utilities, and a clean starting structure.
+## Usage
+
+Only global administrators see the **Curriculum** page in the module navigation. It shows the
+loaded version, the current and retired terms and the history of imports.
+
+1. **Upload release.** Upload the three files of a published release (`v<version>` assets):
+   `curriculo.json`, `curriculo.json.sha256` and `cur.ttl`. They are checked before anything is
+   saved: the sha256, the structure of the JSON, the URI base, a version not older than the loaded
+   one and no other import in progress.
+2. **Review the report.** The release is analyzed in a background job. The import page shows the
+   new, modified and retired items, the changes of the `cur` vocabulary and any blocking error,
+   such as an item of the item set that is not in the release.
+3. **Apply.** Another job writes the approved report: the `cur` vocabulary, one resource template
+   per class, the item sets, the items with their literals and then their links, and finally the
+   loaded version (`dcterms:hasVersion`). If the items changed after the analysis, nothing is
+   written and the import must be analyzed again.
+
+An import that was not applied can be discarded. An interrupted apply step is analyzed again; the
+new report shows what is left. Properties and item sets added to the items by hand or by other
+modules are kept; values of the properties the module owns are replaced. Uninstalling the module
+removes its imports and their files, not the items, item sets, templates or vocabularies.
+
+Statuses of an import: `analyzing`, `ready`, `blocked` (the report has errors), `stale` (analyze
+again), `applying`, `interrupted` and `applied`.
+
+### Performance
+
+Measured with release 1.1.2 (15,438 nodes) on the Docker stack: the first analysis takes about
+2 s and the apply job about 2 minutes; analyzing the loaded release again takes under 1 s. The
+analysis of a loaded curriculum peaks at about 400 MB, so jobs need a PHP `memory_limit` of at
+least 512M.
+
+## Requirements
+
+- Omeka S 4.2 or later
+- PHP 7.4+
+- The module installs the SKOS vocabulary unless it is already installed.
 
 ## Quick Start (Docker)
 
 - Requirements: Docker Desktop 4+, Make
-- Start stack: `make up` then open `http://localhost:8080`
+- Start stack: `make up` then open `http://localhost:8080` (set `OMEKA_PORT` to use another port, e.g. `OMEKA_PORT=8081 make upd`)
 - Stop stack: `make down`
 
-This template uses the image `erseco/alpine-omeka-s:4.2` (the newest Omeka S 4.2 release, as the Playground), which boots Omeka S with sensible defaults and tooling.
-On every start it applies `blueprint.json`, the same file as the Omeka S Playground (users, this module, settings).
-
-### Sample Data
-
-- A ready-to-use CSV lives at `data/sample_data.csv`.
-- On first boot, the container will automatically import it if present.
-- Import manually any time: `make import-sample`
+The stack uses the image `erseco/alpine-omeka-s:4.2` and applies `blueprint.json` on every start,
+the same file as the Omeka S Playground (users, this module, the demo site).
 
 Users created automatically (from `blueprint.json`):
 - `admin@example.com` (global_admin) password: `password`
@@ -37,8 +71,8 @@ Users created automatically (from `blueprint.json`):
 - `make down` / `make clean`: Stop, optionally remove volumes
 - `make logs`: Tail container logs
 - `make shell`: Shell into the `omekas` container
-- `make import-sample`: Import the CSV at `$OMEKA_CSV_IMPORT_FILE`
 - `make enable-module`: Enable this module inside Omeka S
+- `make lint`: Run PHP_CodeSniffer (PSR2)
 - `make test`: Run PHPUnit tests
 - `make package VERSION=x.y.z`: Build a distributable ZIP
 
@@ -47,31 +81,31 @@ Run `make help` to see all targets.
 ## Project Structure
 
 ```text
-ModuleTemplate/
+EducationalCurriculum/
+├── Module.php                   # Main module class (entry point)
 ├── config/
-│   └── module.ini               # Module metadata
+│   ├── module.ini               # Module metadata
+│   └── module.config.php        # Services, routes, views, translations
+├── data/                        # Install SQL and the bundled SKOS vocabulary
 ├── src/
-│   └── Module.php               # Main module class (entry point)
-├── view/                        # Templates (optional)
-├── asset/                       # Static assets (JS, CSS, images)
+│   ├── Release/                 # Reads and checks the release files
+│   ├── Mapping/                 # Node → item values, as the contract says
+│   ├── Sync/                    # Current state, planner, writers and synchronizer
+│   ├── Job/                     # Analyze and Apply jobs
+│   ├── Admin/, Controller/      # The Curriculum pages
+│   └── Entity/                  # One row per import
+├── view/                        # Templates
 ├── language/                    # Translations (.po/.mo)
 ├── test/                        # Unit tests and bootstrap
-├── data/sample_3d_data.csv      # Optional sample dataset for CSVImport
 ├── docker-compose.yml           # Dev stack using alpine-omeka-s:4.2
 ├── Makefile                     # Dev helpers (docker, i18n, tests, packaging)
 └── README.md                    # This file
 ```
 
-## Customizing the Template
+## Translations
 
-- Rename namespaces in `composer.json` and under `src/` to your module’s name.
-- Update `config/module.ini` with your module’s metadata.
-- Adjust `docker-compose.yml` to mount your module directory name in `/var/www/html/volume/modules/<YourModule>`.
-
-## Requirements
-
-- Omeka S 4.x or later
-- PHP 7.4+ for development (module code can target higher, adjust `composer.json` accordingly)
+Interface strings are in English with a Spanish translation in `language/es.po`. Run
+`make i18n` to extract strings, update the catalog, check for untranslated strings and compile it.
 
 ## License
 
