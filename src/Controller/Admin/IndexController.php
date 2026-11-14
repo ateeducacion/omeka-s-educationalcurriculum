@@ -25,10 +25,16 @@ class IndexController extends AbstractActionController
     const LISTS = ['new', 'modified', 'retired'];
 
     private $manager;
+    private $isUploadedFile;
 
-    public function __construct(ImportManager $manager)
+    /**
+     * @param callable|null $isUploadedFile Tells whether a path is a file PHP received in this
+     *   request; is_uploaded_file() unless a test replaces it
+     */
+    public function __construct(ImportManager $manager, ?callable $isUploadedFile = null)
     {
         $this->manager = $manager;
+        $this->isUploadedFile = $isUploadedFile ?? 'is_uploaded_file';
     }
 
     public function indexAction()
@@ -41,16 +47,20 @@ class IndexController extends AbstractActionController
         $form = $this->getForm(UploadForm::class);
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $form->setData(array_merge_recursive($request->getPost()->toArray(), $request->getFiles()->toArray()));
-            if ($form->isValid()) {
-                $data = $form->getData();
+            // File fields come only from the files of this request, never from posted fields.
+            $files = array_intersect_key($request->getFiles()->toArray(), array_flip(UploadForm::FILES));
+            $post = array_diff_key($request->getPost()->toArray(), array_flip(UploadForm::FILES));
+            $form->setData(array_merge($post, $files));
+            if (!$form->isValid()) {
+                $this->messenger()->addFormErrors($form);
+                return new ViewModel(['form' => $form]);
+            }
+            $paths = $this->uploadedPaths($files);
+            if ($paths === null) {
+                $this->messenger()->addError('Upload the three files of the release.'); // @translate
+            } else {
                 try {
-                    $import = $this->manager->upload(
-                        $data['curriculo_json']['tmp_name'],
-                        $data['curriculo_sha256']['tmp_name'],
-                        $data['cur_ttl']['tmp_name'],
-                        $this->identity()
-                    );
+                    $import = $this->manager->upload(...array_merge($paths, [$this->identity()]));
                     $this->messenger()->addSuccess(new Message(
                         'Release %s uploaded; its analysis has started.', // @translate
                         $import->getVersion()
@@ -59,11 +69,27 @@ class IndexController extends AbstractActionController
                 } catch (ReleaseException | ImportException $e) {
                     $this->messenger()->addError(new Message($e->getTemplate(), ...$e->getArgs()));
                 }
-            } else {
-                $this->messenger()->addFormErrors($form);
             }
         }
         return new ViewModel(['form' => $form]);
+    }
+
+    /**
+     * Temporary paths of the three files, or null unless each one is a file PHP received.
+     */
+    private function uploadedPaths(array $files): ?array
+    {
+        $paths = [];
+        foreach (UploadForm::FILES as $name) {
+            $path = $files[$name]['tmp_name'] ?? null;
+            if (!is_string($path) || ($files[$name]['error'] ?? null) !== UPLOAD_ERR_OK
+                || !($this->isUploadedFile)($path)
+            ) {
+                return null;
+            }
+            $paths[] = $path;
+        }
+        return $paths;
     }
 
     public function showAction()

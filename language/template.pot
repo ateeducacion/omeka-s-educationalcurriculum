@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 17:01+0000\n"
+"POT-Creation-Date: 2026-11-14 17:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -383,32 +383,36 @@ msgstr ""
 msgid "cur.ttl does not declare the namespace %s."
 msgstr ""
 
-#: src/Controller/Admin/IndexController.php:55
+#: src/Controller/Admin/IndexController.php:59
+msgid "Upload the three files of the release."
+msgstr ""
+
+#: src/Controller/Admin/IndexController.php:64
 #, php-format
 msgid "Release %s uploaded; its analysis has started."
 msgstr ""
 
-#: src/Controller/Admin/IndexController.php:87
+#: src/Controller/Admin/IndexController.php:112
 msgid "Apply"
 msgstr ""
 
-#: src/Controller/Admin/IndexController.php:90
+#: src/Controller/Admin/IndexController.php:115
 msgid "Analyze again"
 msgstr ""
 
-#: src/Controller/Admin/IndexController.php:93
+#: src/Controller/Admin/IndexController.php:118
 msgid "Discard"
 msgstr ""
 
-#: src/Controller/Admin/IndexController.php:110
+#: src/Controller/Admin/IndexController.php:135
 msgid ""
 "The release is being applied. This page shows the result when the job ends."
 msgstr ""
 
-#: src/Controller/Admin/IndexController.php:119
+#: src/Controller/Admin/IndexController.php:144
 msgid "The import is being analyzed again."
 msgstr ""
 
-#: src/Controller/Admin/IndexController.php:127
+#: src/Controller/Admin/IndexController.php:152
 msgid "Import discarded."
 msgstr ""

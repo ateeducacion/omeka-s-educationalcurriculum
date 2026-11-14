@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: EducationalCurriculum\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 17:01+0000\n"
+"POT-Creation-Date: 2026-11-14 17:05+0000\n"
 "PO-Revision-Date: 2026-11-10 00:00+0000\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -119,7 +119,8 @@ msgstr "Informe"
 
 #: view/educational-curriculum/admin/index/show.phtml:110
 msgid "No changes: the items and the vocabulary already match this release."
-msgstr "Sin cambios: las fichas y el vocabulario ya coinciden con esta versión."
+msgstr ""
+"Sin cambios: las fichas y el vocabulario ya coinciden con esta versión."
 
 #: view/educational-curriculum/admin/index/show.phtml:113
 #, php-format
@@ -180,31 +181,41 @@ msgid ""
 "Upload the three files of a published release. They are checked first; if "
 "they are valid, the release is analyzed in the background and nothing "
 "changes until you apply it."
-msgstr "Sube los tres ficheros de una versión publicada. Primero se comprueban; si son válidos, la versión se analiza en segundo plano y no cambia nada hasta que la apliques."
+msgstr ""
+"Sube los tres ficheros de una versión publicada. Primero se comprueban; si "
+"son válidos, la versión se analiza en segundo plano y no cambia nada hasta "
+"que la apliques."
 
 #: view/educational-curriculum/admin/index/show.phtml:53
 msgid "The release is being analyzed. Reload this page to see the report."
-msgstr "La versión se está analizando. Recarga esta página para ver el informe."
+msgstr ""
+"La versión se está analizando. Recarga esta página para ver el informe."
 
 #: view/educational-curriculum/admin/index/show.phtml:54
 msgid "The release is being applied. Reload this page to see the result."
-msgstr "La versión se está aplicando. Recarga esta página para ver el resultado."
+msgstr ""
+"La versión se está aplicando. Recarga esta página para ver el resultado."
 
 #: view/educational-curriculum/admin/index/show.phtml:55
 msgid "The report has errors that must be solved before applying the release."
-msgstr "El informe tiene errores que hay que resolver antes de aplicar la versión."
+msgstr ""
+"El informe tiene errores que hay que resolver antes de aplicar la versión."
 
 #: view/educational-curriculum/admin/index/show.phtml:56
 msgid ""
 "The items or the vocabulary changed after the analysis, or the analysis "
 "failed. Analyze the import again before applying it."
-msgstr "Las fichas o el vocabulario cambiaron después del análisis, o el análisis falló. Vuelve a analizar la carga antes de aplicarla."
+msgstr ""
+"Las fichas o el vocabulario cambiaron después del análisis, o el análisis "
+"falló. Vuelve a analizar la carga antes de aplicarla."
 
 #: view/educational-curriculum/admin/index/show.phtml:57
 msgid ""
 "Applying the release was interrupted. Analyze the import again: the new "
 "report shows what is left to apply."
-msgstr "La aplicación de la versión se interrumpió. Vuelve a analizar la carga: el nuevo informe muestra lo que falta por aplicar."
+msgstr ""
+"La aplicación de la versión se interrumpió. Vuelve a analizar la carga: el "
+"nuevo informe muestra lo que falta por aplicar."
 
 #: src/Form/UploadForm.php:24
 msgid "curriculo.json"
@@ -309,7 +320,8 @@ msgstr "Varias fichas del conjunto del currículo tienen el identificador %s."
 
 #: src/Admin/ReportErrors.php:44
 msgid "An item of the curriculum item set has no literal dcterms:identifier."
-msgstr "Una ficha del conjunto del currículo no tiene un dcterms:identifier literal."
+msgstr ""
+"Una ficha del conjunto del currículo no tiene un dcterms:identifier literal."
 
 #: src/Admin/ReportErrors.php:49
 #, php-format
@@ -347,7 +359,8 @@ msgstr "La versión %s es anterior a la versión cargada %s."
 
 #: src/Release/Reader.php:64
 msgid "The checksum file must contain \"<sha256>  curriculo.json\"."
-msgstr "El fichero de suma de comprobación debe contener «<sha256>  curriculo.json»."
+msgstr ""
+"El fichero de suma de comprobación debe contener «<sha256>  curriculo.json»."
 
 #: src/Release/Reader.php:67
 msgid "The sha256 checksum does not match curriculo.json."
@@ -376,32 +389,38 @@ msgstr "No se puede leer cur.ttl."
 msgid "cur.ttl does not declare the namespace %s."
 msgstr "cur.ttl no declara el espacio de nombres %s."
 
-#: src/Controller/Admin/IndexController.php:55
+#: src/Controller/Admin/IndexController.php:59
+msgid "Upload the three files of the release."
+msgstr "Sube los tres ficheros de la versión."
+
+#: src/Controller/Admin/IndexController.php:64
 #, php-format
 msgid "Release %s uploaded; its analysis has started."
 msgstr "Versión %s subida; ha comenzado su análisis."
 
-#: src/Controller/Admin/IndexController.php:87
+#: src/Controller/Admin/IndexController.php:112
 msgid "Apply"
 msgstr "Aplicar"
 
-#: src/Controller/Admin/IndexController.php:90
+#: src/Controller/Admin/IndexController.php:115
 msgid "Analyze again"
 msgstr "Volver a analizar"
 
-#: src/Controller/Admin/IndexController.php:93
+#: src/Controller/Admin/IndexController.php:118
 msgid "Discard"
 msgstr "Descartar"
 
-#: src/Controller/Admin/IndexController.php:110
+#: src/Controller/Admin/IndexController.php:135
 msgid ""
 "The release is being applied. This page shows the result when the job ends."
-msgstr "La versión se está aplicando. Esta página muestra el resultado cuando termine el trabajo."
+msgstr ""
+"La versión se está aplicando. Esta página muestra el resultado cuando "
+"termine el trabajo."
 
-#: src/Controller/Admin/IndexController.php:119
+#: src/Controller/Admin/IndexController.php:144
 msgid "The import is being analyzed again."
 msgstr "La carga se está analizando de nuevo."
 
-#: src/Controller/Admin/IndexController.php:127
+#: src/Controller/Admin/IndexController.php:152
 msgid "Import discarded."
 msgstr "Carga descartada."

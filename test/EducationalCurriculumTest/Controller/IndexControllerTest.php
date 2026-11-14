@@ -85,6 +85,43 @@ class IndexControllerTest extends TestCase
         $this->assertSame(['1.1.2', '1.2.0'], $message->getArgs());
     }
 
+    /**
+     * A POST field named like a file must not give the module a path on the server.
+     */
+    public function testTakesTheFilePathsOnlyFromTheUploadedFiles(): void
+    {
+        $this->manager->expects($this->once())->method('upload')
+            ->with('/tmp/json', '/tmp/sha', '/tmp/ttl')
+            ->willReturn($this->import(4, CurriculumImport::STATUS_ANALYZING));
+        $post = ['csrf' => 'x', 'curriculo_json' => ['tmp_name' => '/etc/passwd']];
+
+        $this->controller([], [], $post, $this->uploadForm(true), $this->files())->uploadAction();
+    }
+
+    public function testTheFormSeesFileFieldsOnlyFromTheUploadedFiles(): void
+    {
+        $form = $this->uploadForm(false);
+        $post = ['csrf' => 'x', 'curriculo_json' => ['tmp_name' => '/etc/passwd']];
+
+        $this->controller([], [], $post, $form)->uploadAction();
+
+        $this->assertSame(['csrf' => 'x'], $form->data);
+    }
+
+    public function testRejectsPathsThatAreNotUploads(): void
+    {
+        $this->manager->expects($this->never())->method('upload');
+        $files = $this->files();
+        $files['curriculo_json']['tmp_name'] = '/etc/passwd';
+
+        $view = $this->controller([], [], ['csrf' => 'x'], $this->uploadForm(true), $files)->uploadAction();
+
+        $this->assertNotNull($view->getVariable('form'));
+        [$type, $message] = $this->context->messenger->messages[0];
+        $this->assertSame('error', $type);
+        $this->assertSame('Upload the three files of the release.', $message);
+    }
+
     public function testDoesNotUploadAnInvalidForm(): void
     {
         $this->manager->expects($this->never())->method('upload');
@@ -240,7 +277,10 @@ class IndexControllerTest extends TestCase
         if ($uploadForm !== null) {
             $this->context->forms[UploadForm::class] = $uploadForm;
         }
-        $controller = new IndexController($this->manager);
+        // Paths under /tmp/ stand for the files PHP received in this request.
+        $controller = new IndexController($this->manager, function ($path) {
+            return is_string($path) && strpos($path, '/tmp/') === 0;
+        });
         $controller->setContext($this->context);
         return $controller;
     }
