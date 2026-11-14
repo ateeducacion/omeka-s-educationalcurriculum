@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace EducationalCurriculum\Release;
 
+use EducationalCurriculum\Stdlib\TranslatableMessage;
 use RuntimeException;
 
 /**
@@ -10,4 +11,5 @@ use RuntimeException;
  */
 class ReleaseException extends RuntimeException
 {
+    use TranslatableMessage;
 }
