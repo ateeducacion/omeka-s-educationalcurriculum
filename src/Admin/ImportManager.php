@@ -11,6 +11,7 @@ use EducationalCurriculum\Release\Reader;
 use EducationalCurriculum\Release\ReleaseException;
 use EducationalCurriculum\Sync\StructureWriter;
 use EducationalCurriculum\Sync\Synchronizer;
+use Omeka\Entity\Job;
 use Omeka\Entity\User;
 use SplFileObject;
 
@@ -136,9 +137,7 @@ class ImportManager
         foreach (array_combine(self::RELEASE_FILES, [$jsonPath, $checksumPath, $vocabularyPath]) as $name => $path) {
             copy($path, $directory . '/' . $name);
         }
-        $import->setAnalyzeJob($this->dispatcher->dispatch(Analyze::class, ['import_id' => $import->getId()]));
-        $this->entityManager->flush();
-        return $import;
+        return $this->dispatch(Analyze::class, $import);
     }
 
     /**
@@ -151,8 +150,8 @@ class ImportManager
         }
         $this->checkNothingRunning();
         $import->setStatus(CurriculumImport::STATUS_ANALYZING);
-        $import->setAnalyzeJob($this->dispatcher->dispatch(Analyze::class, ['import_id' => $import->getId()]));
         $this->entityManager->flush();
+        $this->dispatch(Analyze::class, $import);
     }
 
     /**
@@ -168,8 +167,7 @@ class ImportManager
             throw new ImportException(self::BUSY);
         }
         $this->checkNothingRunning();
-        $import->setApplyJob($this->dispatcher->dispatch(Apply::class, ['import_id' => $import->getId()]));
-        $this->entityManager->flush();
+        $this->dispatch(Apply::class, $import);
     }
 
     /**
@@ -230,6 +228,26 @@ class ImportManager
     public function find(int $id): ?CurriculumImport
     {
         return $this->entityManager->find(CurriculumImport::class, $id);
+    }
+
+    /**
+     * Start a job on the import and record it. With Omeka's synchronous strategy the job runs
+     * inside dispatch() and the entity manager is cleared afterwards, so the import is read again
+     * and the job is attached by reference; the status the job left is kept.
+     */
+    private function dispatch(string $jobClass, CurriculumImport $import): CurriculumImport
+    {
+        $id = $import->getId();
+        $job = $this->dispatcher->dispatch($jobClass, ['import_id' => $id]);
+        $import = $this->find($id);
+        $reference = $this->entityManager->getReference(Job::class, $job->getId());
+        if ($jobClass === Apply::class) {
+            $import->setApplyJob($reference);
+        } else {
+            $import->setAnalyzeJob($reference);
+        }
+        $this->entityManager->flush();
+        return $import;
     }
 
     private function checkNothingRunning(): void

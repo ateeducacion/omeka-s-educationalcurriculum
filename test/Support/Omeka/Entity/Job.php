@@ -5,12 +5,18 @@ namespace Omeka\Entity;
 
 class Job extends AbstractEntity
 {
+    private $id;
     private $args;
     private $status = 'starting';
 
+    public function __construct(?int $id = null)
+    {
+        $this->id = $id;
+    }
+
     public function getId()
     {
-        return null;
+        return $this->id;
     }
 
     public function setArgs($args)

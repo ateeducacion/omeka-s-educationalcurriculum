@@ -47,6 +47,24 @@ class FakeEntityManager
         $this->flushes++;
     }
 
+    /**
+     * Detach every entity, as Doctrine does: later finds return other instances.
+     */
+    public function clear()
+    {
+        foreach ($this->entities as $class => $entities) {
+            foreach ($entities as $id => $entity) {
+                $this->entities[$class][$id] = clone $entity;
+            }
+        }
+        $this->pending = [];
+    }
+
+    public function getReference($class, $id)
+    {
+        return new $class((int) $id);
+    }
+
     public function find($class, $id)
     {
         return $this->entities[$class][(int) $id] ?? null;

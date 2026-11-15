@@ -99,6 +99,46 @@ class ImportManagerTest extends TestCase
         $this->assertSame([$import], $this->entityManager->getRepository(CurriculumImport::class)->findBy([]));
     }
 
+    /**
+     * With Omeka's synchronous strategy the job runs inside dispatch() and the entity manager is
+     * cleared afterwards: the import is read again and the job is attached by reference.
+     */
+    public function testUploadWorksWhenTheJobRunsInsideTheDispatch(): void
+    {
+        $this->synchronousJobs(CurriculumImport::STATUS_READY);
+
+        $import = $this->manager()->upload(...$this->uploadedFiles());
+
+        $stored = $this->entityManager->find(CurriculumImport::class, 1);
+        $this->assertSame($stored, $import);
+        $this->assertSame(CurriculumImport::STATUS_READY, $stored->getStatus());
+        $this->assertSame(1, $stored->getAnalyzeJob()->getId());
+    }
+
+    public function testAnalysisAgainKeepsTheStatusLeftByASynchronousJob(): void
+    {
+        $this->import(1, CurriculumImport::STATUS_STALE);
+        $this->synchronousJobs(CurriculumImport::STATUS_BLOCKED, CurriculumImport::STATUS_ANALYZING);
+
+        $this->manager()->analyze($this->entityManager->find(CurriculumImport::class, 1));
+
+        $stored = $this->entityManager->find(CurriculumImport::class, 1);
+        $this->assertSame(CurriculumImport::STATUS_BLOCKED, $stored->getStatus());
+        $this->assertSame(1, $stored->getAnalyzeJob()->getId());
+    }
+
+    public function testApplyRecordsItsJobWhenItRunsInsideTheDispatch(): void
+    {
+        $this->import(1, CurriculumImport::STATUS_READY);
+        $this->synchronousJobs(CurriculumImport::STATUS_APPLIED);
+
+        $this->manager()->apply($this->entityManager->find(CurriculumImport::class, 1));
+
+        $stored = $this->entityManager->find(CurriculumImport::class, 1);
+        $this->assertSame(CurriculumImport::STATUS_APPLIED, $stored->getStatus());
+        $this->assertSame(1, $stored->getApplyJob()->getId());
+    }
+
     public function testUploadRejectsAnInvalidReleaseWithoutSavingAnything(): void
     {
         file_put_contents($this->upload . '/curriculo.json.sha256', str_repeat('0', 64) . "  curriculo.json\n");
@@ -160,7 +200,7 @@ class ImportManagerTest extends TestCase
 
         $this->assertSame(CurriculumImport::STATUS_ANALYZING, $import->getStatus());
         $this->assertSame([[Analyze::class, ['import_id' => 1]]], $this->dispatcher->dispatched);
-        $this->assertSame(['import_id' => 1], $import->getAnalyzeJob()->getArgs());
+        $this->assertSame(1, $import->getAnalyzeJob()->getId());
     }
 
     public function testDoesNotAnalyzeAnAppliedImport(): void
@@ -178,7 +218,7 @@ class ImportManagerTest extends TestCase
         $this->manager()->apply($import);
 
         $this->assertSame([[Apply::class, ['import_id' => 1]]], $this->dispatcher->dispatched);
-        $this->assertSame(['import_id' => 1], $import->getApplyJob()->getArgs());
+        $this->assertSame(1, $import->getApplyJob()->getId());
         $this->assertSame(CurriculumImport::STATUS_READY, $import->getStatus());
     }
 
@@ -268,6 +308,23 @@ class ImportManagerTest extends TestCase
         $this->expectExceptionMessage('Unknown list "other".');
 
         $this->manager()->page($this->import(1, CurriculumImport::STATUS_READY), 'other', 1, 50);
+    }
+
+    /**
+     * Jobs run inside dispatch(): each one checks the saved status, leaves its own and the entity
+     * manager is cleared, as Omeka\Job\DispatchStrategy\Synchronous does.
+     */
+    private function synchronousJobs(string $resultStatus, ?string $expectedStatus = null): void
+    {
+        $this->dispatcher = new FakeDispatcher(function ($class, $args) use ($resultStatus, $expectedStatus) {
+            $import = $this->entityManager->find(CurriculumImport::class, $args['import_id']);
+            if ($expectedStatus !== null) {
+                $this->assertSame($expectedStatus, $import->getStatus(), 'The status is saved before the job runs.');
+            }
+            $import->setStatus($resultStatus);
+            $this->entityManager->flush();
+            $this->entityManager->clear();
+        });
     }
 
     private function manager(string $uriBase = self::BASE): ImportManager
